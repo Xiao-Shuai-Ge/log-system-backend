@@ -2,6 +2,13 @@
 
 这是一个基于 **Go-Zero** 微服务框架构建的分布式日志查询演示系统。系统旨在模拟高性能日志采集、存储及实时查询场景。
 
+## 启动命令行
+
+```bash
+go run application/log-ingester/api/logingester.go
+```
+
+
 ## 🏗 架构设计
 
 ### 1. 逻辑架构
@@ -33,7 +40,6 @@
 │   │   │   ├── service/        # 核心业务逻辑 (手工编写)
 │   │   │   ├── repository/     # 数据持久化逻辑 (ES 操作)
 │   │   │   └── config/         # 配置文件定义
-│   │   └── etc/                # 配置文件 (yaml)
 │   └── log-query/              # 日志查询服务 (负责搜索日志)
 ├── common/                     # 公共组件库
 │   ├── errorx/                 # 业务错误定义
@@ -42,6 +48,7 @@
 ├── deploy/                     # 部署相关
 │   ├── docker-compose.yml      # 一键启动环境
 │   └── sql/                    # (如有) 数据库初始化脚本
+├── etc/                        # 配置文件 (yaml)
 └── README.md
 ```
 
@@ -77,4 +84,4 @@ goctl rpc protoc *.proto --go_out=. --go-grpc_out=. --zrpc_out=.
 1. **逻辑下沉**：严禁在 `api/internal/logic` 或 `rpc/internal/logic` 中直接编写复杂的业务逻辑。
 2. **接口先行**：`repository` 层应定义接口，方便进行单元测试和存储介质切换。
 3. **错误处理**：使用 `common/errorx` 定义的业务错误码，避免在代码中到处硬编码错误信息。
-4. **配置隔离**：每个微服务维护自己的 `etc/*.yaml`，公共配置可提取到 `common`。
+4. **配置隔离**：配置文件统一放在项目根目录 `etc/*.yaml`，并建议按服务入口命名（例如 `logingester-api.yaml`、`logingester-rpc.yaml`）。
