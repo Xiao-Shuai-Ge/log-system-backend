@@ -4,9 +4,19 @@
 
 ## 启动命令行
 
+### 1. Docker Compose 配置项启动（Elasticsearch、Etcd、Kibana）
+
+```bash
+# 在项目根目录下执行
+docker-compose -f deploy/docker-compose.yml up -d
+```
+
+### 2. 微服务命令行启动
+
 ```bash
 go run application/log-api/api/log.go
 go run application/log-ingester/rpc/ingester.go
+go run application/log-query/rpc/query.go
 ```
 
 ## 🏗 架构设计
