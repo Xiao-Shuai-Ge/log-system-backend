@@ -18,5 +18,34 @@ services:
       timeout: 5s
       retries: 30
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    container_name: log-system-kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - XPACK_SECURITY_ENABLED=false
+    ports:
+      - "5601:5601"
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.11
+    container_name: log-system-etcd
+    command:
+      - /usr/local/bin/etcd
+      - --advertise-client-urls=http://0.0.0.0:2379
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --initial-advertise-peer-urls=http://0.0.0.0:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --initial-cluster=default=http://0.0.0.0:2380
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+
 volumes:
   esdata:

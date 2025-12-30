@@ -1,6 +1,13 @@
 package repository
 
-import "context"
+import (
+	"context"
+	"fmt"
+
+	"log-system-backend/common/es"
+
+	"github.com/elastic/go-elasticsearch/v8"
+)
 
 // LogRepository 定义了日志存储的接口
 type LogRepository interface {
@@ -9,14 +16,29 @@ type LogRepository interface {
 
 // esRepository 是 Elasticsearch 的实现
 type esRepository struct {
-	// 这里未来可以持有 ES 的 client
+	client *elasticsearch.Client
+	index  string
 }
 
-func NewESRepository() LogRepository {
-	return &esRepository{}
+func NewESRepository(client *elasticsearch.Client, index string) LogRepository {
+	return &esRepository{
+		client: client,
+		index:  index,
+	}
 }
 
 func (r *esRepository) Save(ctx context.Context, data map[string]interface{}) error {
-	// 实现具体的 ES 写入逻辑
-	return nil
+	if r.client == nil {
+		return fmt.Errorf("es client is nil")
+	}
+	if r.index == "" {
+		return fmt.Errorf("es index is empty")
+	}
+
+	resp, err := es.IndexJSON(ctx, r.client, r.index, data)
+	if err != nil {
+		return err
+	}
+	_, err = es.ReadBody(resp)
+	return err
 }
