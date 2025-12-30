@@ -1,0 +1,15 @@
+Name: logIngester.rpc
+ListenOn: 0.0.0.0:9091
+Mode: dev
+
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: ingester.rpc
+
+ES:
+  Addresses:
+    - http://localhost:9200
+
+Index: logs
+

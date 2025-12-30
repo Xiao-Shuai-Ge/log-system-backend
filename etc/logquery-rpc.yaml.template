@@ -1,0 +1,14 @@
+Name: logquery.rpc
+ListenOn: 0.0.0.0:9092
+Mode: dev
+
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: query.rpc
+
+ES:
+  Addresses:
+    - http://localhost:9200
+
+Index: logs

@@ -1,0 +1,15 @@
+Name: log-api
+Host: 0.0.0.0
+Port: 8080
+
+LogIngesterRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: ingester.rpc
+
+LogQueryRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: query.rpc
