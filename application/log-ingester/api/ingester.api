@@ -1,0 +1,21 @@
+syntax = "v1"
+
+info (
+	title:   "log-ingester"
+	desc:    "log ingester api"
+	author:  "log-system"
+	version: "v1"
+)
+
+type PingResp {
+	Message string `json:"message"`
+}
+
+@server (
+	group: ping
+)
+service logIngester {
+	@handler Ping
+	get /ping returns (PingResp)
+}
+
