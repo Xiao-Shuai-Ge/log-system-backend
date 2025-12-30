@@ -10,10 +10,30 @@ type (
 	WriteLogResp {
 		Ok bool `json:"ok"`
 	}
+	SearchLogReq {
+		Source   string `form:"source,optional"`
+		Keyword  string `form:"keyword,optional"`
+		Metadata string `form:"metadata,optional"` // JSON string
+		Page     int64  `form:"page,default=1"`
+		PageSize int64  `form:"page_size,default=10"`
+	}
+	LogItem {
+		Id        string                 `json:"id"`
+		Source    string                 `json:"source"`
+		Timestamp string                 `json:"timestamp"`
+		Content   map[string]interface{} `json:"content"`
+	}
+	SearchLogResp {
+		Logs  []LogItem `json:"logs"`
+		Total int64     `json:"total"`
+	}
 )
 
 service log-api {
 	@handler WriteLog
 	post /log/write (WriteLogReq) returns (WriteLogResp)
+
+	@handler SearchLog
+	get /log/search (SearchLogReq) returns (SearchLogResp)
 }
 
