@@ -25,17 +25,18 @@ func NewLogApiService(ingesterRpc logingester.LogIngester) LogApiService {
 }
 
 func (s *logApiService) WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
-	data := map[string]interface{}{
-		"source":  source,
-		"level":   level,
-		"content": content,
-	}
+	data := make(map[string]interface{})
 
 	if metadata != nil {
 		for k, v := range metadata {
 			data[k] = v
 		}
 	}
+
+	// 核心字段最后赋值，确保其优先级最高，不会被 metadata 中的同名键覆盖
+	data["source"] = source
+	data["level"] = level
+	data["content"] = content
 
 	logData, err := structpb.NewStruct(data)
 	if err != nil {
