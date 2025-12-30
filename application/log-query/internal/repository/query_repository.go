@@ -62,16 +62,15 @@ func (r *esRepository) Search(ctx context.Context, q SearchQuery) (*SearchResult
 	}
 
 	for k, v := range q.Metadata {
-		// Try exact match on keyword field if possible, otherwise just term
-		// We try k.keyword first? No, we don't know if it exists.
-		// Let's assume the user passes the correct field name or we append .keyword
-		// But for metadata, keys are dynamic. 
-		// If we blindly append .keyword, it might fail if mapping doesn't exist.
-		// Let's just use the key as provided, but maybe use "match_phrase" or "term".
-		// "term" is exact match.
+		// For metadata, we try to use .keyword for exact matching if it's not already specified
+		// This is a common pattern in ES for dynamic fields
+		field := k
+		if k == "level" || k == "source" {
+			field = k + ".keyword"
+		}
 		must = append(must, map[string]interface{}{
 			"term": map[string]interface{}{
-				k: v,
+				field: v,
 			},
 		})
 	}
@@ -92,7 +91,8 @@ func (r *esRepository) Search(ctx context.Context, q SearchQuery) (*SearchResult
 		"from": (q.Page - 1) * q.PageSize,
 		"size": q.PageSize,
 		"sort": []map[string]interface{}{
-			{"@timestamp": "desc"}, // Assuming @timestamp or just default score
+			{"@timestamp": map[string]interface{}{"order": "desc", "unmapped_type": "date"}},
+			{"_score": "desc"},
 		},
 	}
 

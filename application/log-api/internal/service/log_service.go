@@ -5,6 +5,7 @@ import (
 
 	"log-system-backend/common/errorx"
 	"log-system-backend/common/rpc/logingester"
+	"log-system-backend/common/rpc/logquery"
 
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -12,15 +13,18 @@ import (
 
 type LogApiService interface {
 	WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error
+	SearchLog(ctx context.Context, source, keyword string, metadata map[string]string, page, pageSize int64) (*logquery.SearchLogResp, error)
 }
 
 type logApiService struct {
 	ingesterRpc logingester.LogIngester
+	queryRpc    logquery.LogQuery
 }
 
-func NewLogApiService(ingesterRpc logingester.LogIngester) LogApiService {
+func NewLogApiService(ingesterRpc logingester.LogIngester, queryRpc logquery.LogQuery) LogApiService {
 	return &logApiService{
 		ingesterRpc: ingesterRpc,
+		queryRpc:    queryRpc,
 	}
 }
 
@@ -47,12 +51,30 @@ func (s *logApiService) WriteLog(ctx context.Context, source, level, content str
 		Data: logData,
 	})
 	if err != nil {
-		// 将 gRPC 错误转换为业务错误
-		st, ok := status.FromError(err)
-		if ok {
-			return errorx.NewCodeError(int(st.Code()), st.Message())
-		}
-		return errorx.NewCodeError(errorx.CodeInternal, err.Error())
+		return s.convertGrpcError(err)
 	}
 	return nil
+}
+
+func (s *logApiService) SearchLog(ctx context.Context, source, keyword string, metadata map[string]string, page, pageSize int64) (*logquery.SearchLogResp, error) {
+	rpcResp, err := s.queryRpc.SearchLog(ctx, &logquery.SearchLogReq{
+		Source:   source,
+		Keyword:  keyword,
+		Metadata: metadata,
+		Page:     page,
+		PageSize: pageSize,
+	})
+	if err != nil {
+		return nil, s.convertGrpcError(err)
+	}
+
+	return rpcResp, nil
+}
+
+func (s *logApiService) convertGrpcError(err error) error {
+	st, ok := status.FromError(err)
+	if ok {
+		return errorx.NewCodeError(int(st.Code()), st.Message())
+	}
+	return errorx.NewCodeError(errorx.CodeInternal, err.Error())
 }

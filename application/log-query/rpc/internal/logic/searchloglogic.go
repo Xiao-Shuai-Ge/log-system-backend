@@ -35,15 +35,11 @@ func (l *SearchLogLogic) SearchLog(in *query.SearchLogReq) (*query.SearchLogResp
 		id, _ := logMap["_id"].(string)
 		source, _ := logMap["source"].(string)
 
-		// Timestamp handling: could be string or float64 (if JSON number)
-		// We try string first
-		timestamp, ok := logMap["timestamp"].(string)
+		// Timestamp handling: priority to @timestamp
+		timestamp, ok := logMap["@timestamp"].(string)
 		if !ok {
-			// If not string, maybe it's missing or another type.
-			// We can try to format it if it's float64?
-			// For now, let's leave empty if not string.
-			// Or check @timestamp which ES adds?
-			if ts, ok := logMap["@timestamp"].(string); ok {
+			// fallback to timestamp
+			if ts, ok := logMap["timestamp"].(string); ok {
 				timestamp = ts
 			}
 		}

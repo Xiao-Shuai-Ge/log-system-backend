@@ -9,7 +9,6 @@ import (
 
 	"log-system-backend/application/log-api/api/internal/svc"
 	"log-system-backend/application/log-api/api/internal/types"
-	"log-system-backend/common/rpc/logquery"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,13 +35,7 @@ func (l *SearchLogLogic) SearchLog(req *types.SearchLogReq) (resp *types.SearchL
 		}
 	}
 
-	rpcResp, err := l.svcCtx.LogQueryRpc.SearchLog(l.ctx, &logquery.SearchLogReq{
-		Source:   req.Source,
-		Keyword:  req.Keyword,
-		Metadata: metadata,
-		Page:     req.Page,
-		PageSize: req.PageSize,
-	})
+	rpcResp, err := l.svcCtx.LogApiService.SearchLog(l.ctx, req.Source, req.Keyword, metadata, req.Page, req.PageSize)
 	if err != nil {
 		return nil, err
 	}

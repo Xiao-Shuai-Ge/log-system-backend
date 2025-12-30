@@ -19,9 +19,10 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+	logQueryRpc := logquery.NewLogQuery(zrpc.MustNewClient(c.LogQueryRpc))
 	return &ServiceContext{
 		Config:        c,
-		LogApiService: service.NewLogApiService(logingester.NewLogIngester(zrpc.MustNewClient(c.LogIngesterRpc))),
-		LogQueryRpc:   logquery.NewLogQuery(zrpc.MustNewClient(c.LogQueryRpc)),
+		LogApiService: service.NewLogApiService(logingester.NewLogIngester(zrpc.MustNewClient(c.LogIngesterRpc)), logQueryRpc),
+		LogQueryRpc:   logQueryRpc,
 	}
 }
