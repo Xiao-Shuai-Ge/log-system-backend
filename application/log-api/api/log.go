@@ -35,7 +35,10 @@ func main() {
 		case *errorx.CodeError:
 			return http.StatusOK, e.Data()
 		default:
-			return http.StatusInternalServerError, nil
+			return http.StatusInternalServerError, &errorx.CodeErrorResponse{
+				Code: http.StatusInternalServerError,
+				Msg:  "服务器内部错误",
+			}
 		}
 	})
 
