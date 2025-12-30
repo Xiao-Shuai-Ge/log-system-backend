@@ -46,7 +46,7 @@ go run application/log-ingester/api/logingester.go
 ├── common/                     # 公共组件库
 │   ├── errorx/                 # 业务错误定义
 │   ├── middleware/             # 统一中间件
-│   └── utils/                  # 工具类
+│   └── rpc/                    # gRPC 客户端
 ├── deploy/                     # 部署相关
 │   ├── docker-compose.yml      # 一键启动环境
 │   └── sql/                    # (如有) 数据库初始化脚本

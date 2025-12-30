@@ -31,5 +31,21 @@ services:
     ports:
       - "5601:5601"
 
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.11
+    container_name: log-system-etcd
+    command:
+      - /usr/local/bin/etcd
+      - --advertise-client-urls=http://0.0.0.0:2379
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --initial-advertise-peer-urls=http://0.0.0.0:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --initial-cluster=default=http://0.0.0.0:2380
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+
 volumes:
   esdata:
