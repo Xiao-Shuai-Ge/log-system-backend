@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ingester;
+
+option go_package = "types/ingester";
+
+import "google/protobuf/struct.proto";
+
+message WriteLogReq {
+  google.protobuf.Struct data = 1;
+}
+
+message WriteLogResp {
+  string result = 1;
+}
+
+service LogIngester {
+  rpc WriteLog(WriteLogReq) returns (WriteLogResp);
+}

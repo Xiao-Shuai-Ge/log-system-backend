@@ -4,7 +4,7 @@
 
 ## 核心框架/库
 
-微服务框架：使用 Go Zero 的服务发现、RPC、配置管理等微服务所需的基础组件。
+微服务框架：使用 Go Zero 的服务发现、RPC、配置管理等微服务所需的基础组件。API、RPC 均要使用 Go Zero 提供的工具生成。
 RPC协议：使用 gRPC（高效）或JSON over HTTP（简单）进行服务间通信。
 数据存储：使用Elasticsearch（ES）存储和索引日志（便于关键词查询）。
 部署：使用 Docker 容器化每个微服务，并通过 docker-compose.yml 文件在开发环境一键编排部署所有组件。

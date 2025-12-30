@@ -18,5 +18,18 @@ services:
       timeout: 5s
       retries: 30
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    container_name: log-system-kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - XPACK_SECURITY_ENABLED=false
+    ports:
+      - "5601:5601"
+
 volumes:
   esdata:
