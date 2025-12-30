@@ -2,11 +2,10 @@ package logic
 
 import (
 	"context"
-	"fmt"
-	"time"
 
 	"log-system-backend/application/log-ingester/rpc/internal/svc"
 	"log-system-backend/application/log-ingester/rpc/types/ingester"
+	"log-system-backend/common/errorx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,15 +26,12 @@ func NewWriteLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *WriteLog
 
 func (l *WriteLogLogic) WriteLog(in *ingester.WriteLogReq) (*ingester.WriteLogResp, error) {
 	if in == nil || in.Data == nil {
-		return nil, fmt.Errorf("data is required")
+		return nil, errorx.NewCodeError(errorx.CodeParamError, "data is required")
 	}
 
 	data := in.Data.AsMap()
 	if len(data) == 0 {
-		return nil, fmt.Errorf("data is empty")
-	}
-	if _, ok := data["@timestamp"]; !ok {
-		data["@timestamp"] = time.Now().UTC().Format(time.RFC3339Nano)
+		return nil, errorx.NewCodeError(errorx.CodeParamError, "data is empty")
 	}
 
 	if err := l.svcCtx.Ingester.WriteLog(l.ctx, data); err != nil {

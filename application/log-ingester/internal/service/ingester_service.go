@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"log-system-backend/application/log-ingester/internal/repository"
 )
 
@@ -21,8 +23,12 @@ func NewIngesterService(repo repository.LogRepository) IngesterService {
 }
 
 func (s *ingesterService) WriteLog(ctx context.Context, data map[string]interface{}) error {
-	// 这里可以添加业务逻辑，比如：
-	// 1. 数据清洗
+	// 1. 数据清洗/填充
+	if _, ok := data["@timestamp"]; !ok {
+		data["@timestamp"] = time.Now().UTC().Format(time.RFC3339Nano)
+	}
+
+	// 这里可以添加更多业务逻辑，比如：
 	// 2. 格式化转换
 	// 3. 权限校验等
 	return s.repo.Save(ctx, data)
