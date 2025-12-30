@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package query;
+
+option go_package = "types/query";
+
+import "google/protobuf/struct.proto";
+
+message SearchLogReq {
+  string source = 1;
+  string keyword = 2;
+  map<string, string> metadata = 3;
+  int64 page = 4;
+  int64 page_size = 5;
+}
+
+message LogItem {
+  string id = 1;
+  string source = 2;
+  string timestamp = 3;
+  google.protobuf.Struct content = 4;
+}
+
+message SearchLogResp {
+  repeated LogItem logs = 1;
+  int64 total = 2;
+}
+
+service LogQuery {
+  rpc SearchLog(SearchLogReq) returns (SearchLogResp);
+}

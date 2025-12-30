@@ -11,4 +11,5 @@ import (
 type Config struct {
 	rest.RestConf
 	LogIngesterRpc zrpc.RpcClientConf
+	LogQueryRpc    zrpc.RpcClientConf
 }

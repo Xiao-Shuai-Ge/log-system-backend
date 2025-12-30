@@ -3,6 +3,26 @@
 
 package types
 
+type LogItem struct {
+	Id        string                 `json:"id"`
+	Source    string                 `json:"source"`
+	Timestamp string                 `json:"timestamp"`
+	Content   map[string]interface{} `json:"content"`
+}
+
+type SearchLogReq struct {
+	Source   string `form:"source,optional"`
+	Keyword  string `form:"keyword,optional"`
+	Metadata string `form:"metadata,optional"` // JSON string
+	Page     int64  `form:"page,default=1"`
+	PageSize int64  `form:"page_size,default=10"`
+}
+
+type SearchLogResp struct {
+	Logs  []LogItem `json:"logs"`
+	Total int64     `json:"total"`
+}
+
 type WriteLogReq struct {
 	Source   string                 `json:"source"`
 	Level    string                 `json:"level"`
