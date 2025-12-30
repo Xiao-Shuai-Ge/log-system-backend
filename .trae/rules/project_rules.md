@@ -8,12 +8,18 @@
 RPC协议：使用 gRPC（高效）或JSON over HTTP（简单）进行服务间通信。
 数据存储：使用Elasticsearch（ES）存储和索引日志（便于关键词查询）。
 部署：使用 Docker 容器化每个微服务，并通过 docker-compose.yml 文件在开发环境一键编排部署所有组件。
-系统结构与服务划分：日志接收服务（Log Ingester）：接收来自其他应用或Agent的日志写入请求，并持久化到存储中。日志查询服务（Log Query API）：提供RESTful API接口，供前端根据时间、关键词等条件查询日志。
-Web前端（Web UI）：一个简单的Web界面（Vue），允许用户输入查询条件并展示日志结果。
+系统结构与服务划分：
+- **Log API (BFF/Gateway)**：作为系统唯一的 RESTful 入口，负责聚合各个 RPC 服务的数据并处理用户鉴权。
+- **Log Ingester (RPC Service)**：接收日志写入请求，专注于高并发持久化到 Elasticsearch。
+- **Log Query (RPC Service)**：提供强大的日志检索接口，屏蔽 ES 查询复杂度。
+- **User Auth (RPC Service)**：负责用户管理、登录鉴权及权限控制。
+- **Web UI**：Vue 前端，仅与 Log API 通信。
 
 关键技术点：
-服务解耦：服务间通过清晰的API或RPC接口进行通信，各司其职。并发处理：Ingester服务需要能并发处理大量入站日志连接和请求。
-分布式追踪：可集成 OpenTracing/Jaeger 来追踪一个请求在不同微服务间的调用路径，便于调试。
+- **聚合层设计**：Log API 严禁包含复杂的存储层逻辑，仅负责调用 RPC 服务进行业务编排。
+- **服务隔离**：内部 RPC 服务不暴露 HTTP 端口，增强安全性。
+- **高效通信**：BFF 与领域服务之间统一使用 gRPC 协议。
+- **分布式追踪**：可集成 OpenTracing/Jaeger 来追踪一个请求在不同微服务间的调用路径，便于调试。
 
 拓展功能：
 为日志接收端增加身份认证，防止恶意写入。实现对日志数据的简单统计图表展示（如错误日志数量随时间变化）。

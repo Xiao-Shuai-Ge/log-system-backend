@@ -11,18 +11,20 @@ go run application/log-ingester/api/logingester.go
 
 ## 🏗 架构设计
 
-### 1. 逻辑架构
-系统采用分层解耦架构，确保业务逻辑与通信协议（HTTP/gRPC）分离：
+### 1. 逻辑架构 (BFF + 微服务模式)
+系统采用 **BFF (Backend For Frontend)** 架构，将外部接口与内部领域服务完全解耦：
 
-- **Entry Layer (入口层)**: `api/` 和 `rpc/` 目录。仅负责请求分发、参数校验及协议转换，不包含任何业务逻辑。
-- **Service Layer (业务层)**: `internal/service/`。核心业务逻辑实现，供 API 和 RPC 共同调用。
-- **Repository Layer (仓储层)**: `internal/repository/`。负责与 Elasticsearch、Redis 等底层存储交互，屏蔽存储细节。
-- **Common Layer (公共层)**: `common/`。提供全局中间件、错误码、工具函数等。
+- **Gateway Layer (API 网关/BFF)**: 统一的 RESTful API 入口，负责请求路由、用户鉴权、数据聚合及简单的业务编排。
+- **Domain Service Layer (领域服务层)**: 核心业务逻辑实现，仅提供 gRPC 接口，不直接暴露给前端。
+    - **Log Ingester**: 专职日志的高并发写入与存储分发。
+    - **Log Query**: 专职海量日志的复杂检索与聚合分析。
+    - **User Auth**: 专职用户权限管理、Token 签发与校验。
+- **Common Layer (公共层)**: 提供全局错误处理、中间件、工具函数等。
 
 ### 2. 技术栈
 - **框架**: [Go-Zero](https://github.com/zeromicro/go-zero) (微服务脚手架)
 - **存储**: Elasticsearch (日志索引与搜索)
-- **通信**: gRPC & RESTful API
+- **通信**: gRPC (内部服务间) & RESTful API (对外暴露)
 - **部署**: Docker & Docker Compose
 - **追踪**: OpenTelemetry / Jaeger (可选)
 
@@ -33,14 +35,14 @@ go run application/log-ingester/api/logingester.go
 ```text
 .
 ├── application/                # 微服务集合
-│   ├── log-ingester/           # 日志接收服务 (负责接收并写入日志)
-│   │   ├── api/                # HTTP 入口 (go-zero 生成)
-│   │   ├── rpc/                # gRPC 入口 (go-zero 生成)
-│   │   ├── internal/
-│   │   │   ├── service/        # 核心业务逻辑 (手工编写)
-│   │   │   ├── repository/     # 数据持久化逻辑 (ES 操作)
-│   │   │   └── config/         # 配置文件定义
-│   └── log-query/              # 日志查询服务 (负责搜索日志)
+│   ├── log-api/                # API 网关 (BFF)，唯一的 HTTP 入口
+│   │   └── api/                # RESTful 接口定义与聚合逻辑
+│   ├── log-ingester/           # 日志接收服务 (RPC)
+│   │   └── rpc/                # gRPC 接口，负责 ES 写入
+│   ├── log-query/              # 日志查询服务 (RPC)
+│   │   └── rpc/                # gRPC 接口，负责 ES 检索
+│   └── user-auth/              # 用户认证服务 (RPC)
+│       └── rpc/                # gRPC 接口，负责鉴权逻辑
 ├── common/                     # 公共组件库
 │   ├── errorx/                 # 业务错误定义
 │   ├── middleware/             # 统一中间件
