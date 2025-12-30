@@ -5,9 +5,9 @@
 ## 启动命令行
 
 ```bash
-go run application/log-ingester/api/logingester.go
+go run application/log-api/api/log.go
+go run application/log-ingester/rpc/ingester.go
 ```
-
 
 ## 🏗 架构设计
 
