@@ -35,7 +35,7 @@ func (r *esRepository) Save(ctx context.Context, data map[string]interface{}) er
 		return fmt.Errorf("es index is empty")
 	}
 
-	resp, err := es.IndexJSON(ctx, r.client, r.index, data, r.client.Index.WithRefresh("wait_for"))
+	resp, err := es.IndexJSON(ctx, r.client, r.index, data)
 	if err != nil {
 		return err
 	}
