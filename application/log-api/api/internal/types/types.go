@@ -4,9 +4,10 @@
 package types
 
 type WriteLogReq struct {
-	Source  string `json:"source"`
-	Level   string `json:"level"`
-	Content string `json:"content"`
+	Source   string                 `json:"source"`
+	Level    string                 `json:"level"`
+	Content  string                 `json:"content"`
+	Metadata map[string]interface{} `json:"metadata,optional"`
 }
 
 type WriteLogResp struct {

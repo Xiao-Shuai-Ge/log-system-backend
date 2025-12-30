@@ -11,7 +11,7 @@ import (
 )
 
 type LogApiService interface {
-	WriteLog(ctx context.Context, source, level, content string) error
+	WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error
 }
 
 type logApiService struct {
@@ -24,11 +24,17 @@ func NewLogApiService(ingesterRpc logingester.LogIngester) LogApiService {
 	}
 }
 
-func (s *logApiService) WriteLog(ctx context.Context, source, level, content string) error {
+func (s *logApiService) WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
 	data := map[string]interface{}{
 		"source":  source,
 		"level":   level,
 		"content": content,
+	}
+
+	if metadata != nil {
+		for k, v := range metadata {
+			data[k] = v
+		}
 	}
 
 	logData, err := structpb.NewStruct(data)
