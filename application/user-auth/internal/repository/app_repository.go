@@ -42,6 +42,7 @@ type AppRepository interface {
 	ListByUserID(ctx context.Context, userID string) ([]*App, error)
 	AssignUser(ctx context.Context, appID, userID string) error
 	RemoveUser(ctx context.Context, appID, userID string) error
+	VerifyUserAccess(ctx context.Context, userID, appCode string) (bool, error)
 }
 
 type mysqlAppRepository struct {
@@ -129,4 +130,16 @@ func (r *mysqlAppRepository) RemoveUser(ctx context.Context, appID, userID strin
 	// We only need the ID for removal usually, but GORM needs the object or ID
 	user.ID = userID
 	return r.db.WithContext(ctx).Model(&app).Association("Users").Delete(&user)
+}
+
+func (r *mysqlAppRepository) VerifyUserAccess(ctx context.Context, userID, appCode string) (bool, error) {
+	var count int64
+	err := r.db.WithContext(ctx).Table("user_apps").
+		Joins("JOIN apps ON apps.id = user_apps.app_id").
+		Where("user_apps.user_id = ? AND apps.app_code = ?", userID, appCode).
+		Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }

@@ -85,23 +85,12 @@ func (s *appService) UpdateApp(ctx context.Context, appID, appName, description 
 }
 
 func (s *appService) VerifyUserAccess(ctx context.Context, userID, appCode string) (bool, error) {
-	// 1. Get User's apps
-	apps, err := s.repo.ListByUserID(ctx, userID)
+	hasAccess, err := s.repo.VerifyUserAccess(ctx, userID, appCode)
 	if err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
-			return false, nil
-		}
 		return false, errorx.NewCodeError(errorx.CodeInternal, "database error")
 	}
 
-	// 2. Check if appCode is in the list
-	for _, app := range apps {
-		if app.AppCode == appCode {
-			return true, nil
-		}
-	}
-
-	return false, nil
+	return hasAccess, nil
 }
 
 func (s *appService) DeleteApp(ctx context.Context, appID string) error {
