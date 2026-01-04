@@ -40,7 +40,6 @@ func (s *authService) Register(ctx context.Context, username, password string) (
 		return "", errorx.NewCodeError(errorx.CodeParamError, "username already exists")
 	}
 	if !errors.Is(err, repository.ErrNotFound) {
-		fmt.Printf("find user error: %v\n", err)
 		return "", errorx.NewCodeError(errorx.CodeInternal, "database error")
 	}
 
@@ -57,7 +56,6 @@ func (s *authService) Register(ctx context.Context, username, password string) (
 
 	err = s.repo.Insert(ctx, user)
 	if err != nil {
-		fmt.Printf("insert user error: %v\n", err)
 		return "", errorx.NewCodeError(errorx.CodeInternal, "failed to create user")
 	}
 
