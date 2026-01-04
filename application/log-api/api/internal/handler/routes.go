@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	app "log-system-backend/application/log-api/api/internal/handler/app"
 	user "log-system-backend/application/log-api/api/internal/handler/user"
 	"log-system-backend/application/log-api/api/internal/svc"
 
@@ -26,6 +27,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: WriteLogHandler(serverCtx),
 			},
 		},
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/app/:app_id",
+				Handler: app.GetAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/app/create",
+				Handler: app.CreateAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/app/delete",
+				Handler: app.DeleteAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/app/list",
+				Handler: app.ListAppsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/app/update",
+				Handler: app.UpdateAppHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 	)
 
 	server.AddRoutes(

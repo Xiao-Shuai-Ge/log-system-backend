@@ -12,6 +12,8 @@ import (
 type ServiceContext struct {
 	Config      config.Config
 	AuthService service.AuthService
+	AppService  service.AppService
+	AppRepo     repository.AppRepository
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -21,11 +23,15 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	// Auto migrate is handled in repository
-	repo := repository.NewMysqlUserRepository(db)
-	authService := service.NewAuthService(repo, c.JwtAuth.AccessSecret, c.JwtAuth.AccessExpire)
+	userRepo := repository.NewMysqlUserRepository(db)
+	appRepo := repository.NewMysqlAppRepository(db)
+	authService := service.NewAuthService(userRepo, c.JwtAuth.AccessSecret, c.JwtAuth.AccessExpire)
+	appService := service.NewAppService(appRepo, userRepo)
 
 	return &ServiceContext{
 		Config:      c,
 		AuthService: authService,
+		AppService:  appService,
+		AppRepo:     appRepo,
 	}
 }

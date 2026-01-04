@@ -31,8 +31,68 @@ message ValidateTokenResponse {
   string user_id = 2;
 }
 
+// App related messages
+message CreateAppRequest {
+  string app_code = 1;
+  string app_name = 2;
+  string description = 3;
+  string user_id = 4;
+}
+
+message CreateAppResponse {
+  string app_id = 1;
+}
+
+message UpdateAppRequest {
+  string app_id = 1;
+  string app_name = 2;
+  string description = 3;
+}
+
+message UpdateAppResponse {}
+
+message DeleteAppRequest {
+  string app_id = 1;
+}
+
+message DeleteAppResponse {}
+
+message GetAppRequest {
+  string app_id = 1;
+}
+
+message GetAppResponse {
+  string app_id = 1;
+  string app_code = 2;
+  string app_name = 3;
+  string description = 4;
+  int64 created_at = 5;
+}
+
+message ListAppsRequest {
+  string user_id = 1;
+}
+
+message AppInfo {
+  string app_id = 1;
+  string app_code = 2;
+  string app_name = 3;
+  string description = 4;
+}
+
+message ListAppsResponse {
+  repeated AppInfo apps = 1;
+}
+
 service Auth {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  
+  // App management
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+  rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
 }

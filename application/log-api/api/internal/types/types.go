@@ -3,6 +3,49 @@
 
 package types
 
+type AppInfo struct {
+	AppId       string `json:"app_id"`
+	AppCode     string `json:"app_code"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+}
+
+type CreateAppReq struct {
+	AppCode     string `json:"app_code"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+}
+
+type CreateAppResp struct {
+	AppId string `json:"app_id"`
+}
+
+type DeleteAppReq struct {
+	AppId string `json:"app_id"`
+}
+
+type DeleteAppResp struct {
+}
+
+type GetAppReq struct {
+	AppId string `path:"app_id"`
+}
+
+type GetAppResp struct {
+	AppId       string `json:"app_id"`
+	AppCode     string `json:"app_code"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+	CreatedAt   int64  `json:"created_at"`
+}
+
+type ListAppsReq struct {
+}
+
+type ListAppsResp struct {
+	Apps []AppInfo `json:"apps"`
+}
+
 type LogItem struct {
 	Id        string                 `json:"id"`
 	Source    string                 `json:"source"`
@@ -39,6 +82,15 @@ type SearchLogReq struct {
 type SearchLogResp struct {
 	Logs  []LogItem `json:"logs"`
 	Total int64     `json:"total"`
+}
+
+type UpdateAppReq struct {
+	AppId       string `json:"app_id"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+}
+
+type UpdateAppResp struct {
 }
 
 type WriteLogReq struct {

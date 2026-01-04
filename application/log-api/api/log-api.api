@@ -41,6 +41,45 @@ type (
 	LoginResp {
 		Token string `json:"token"`
 	}
+	// App management
+	CreateAppReq {
+		AppCode     string `json:"app_code"`
+		AppName     string `json:"app_name"`
+		Description string `json:"description"`
+	}
+	CreateAppResp {
+		AppId string `json:"app_id"`
+	}
+	UpdateAppReq {
+		AppId       string `json:"app_id"`
+		AppName     string `json:"app_name"`
+		Description string `json:"description"`
+	}
+	UpdateAppResp  {}
+	DeleteAppReq {
+		AppId string `json:"app_id"`
+	}
+	DeleteAppResp  {}
+	GetAppReq {
+		AppId string `path:"app_id"`
+	}
+	GetAppResp {
+		AppId       string `json:"app_id"`
+		AppCode     string `json:"app_code"`
+		AppName     string `json:"app_name"`
+		Description string `json:"description"`
+		CreatedAt   int64  `json:"created_at"`
+	}
+	ListAppsReq  {}
+	AppInfo {
+		AppId       string `json:"app_id"`
+		AppCode     string `json:"app_code"`
+		AppName     string `json:"app_name"`
+		Description string `json:"description"`
+	}
+	ListAppsResp {
+		Apps []AppInfo `json:"apps"`
+	}
 )
 
 service log-api {
@@ -60,5 +99,26 @@ service log-api {
 
 	@handler Login
 	post /user/login (LoginReq) returns (LoginResp)
+}
+
+@server (
+	jwt:   JwtAuth
+	group: app
+)
+service log-api {
+	@handler CreateApp
+	post /app/create (CreateAppReq) returns (CreateAppResp)
+
+	@handler UpdateApp
+	post /app/update (UpdateAppReq) returns (UpdateAppResp)
+
+	@handler DeleteApp
+	post /app/delete (DeleteAppReq) returns (DeleteAppResp)
+
+	@handler GetApp
+	get /app/:app_id (GetAppReq) returns (GetAppResp)
+
+	@handler ListApps
+	get /app/list (ListAppsReq) returns (ListAppsResp)
 }
 

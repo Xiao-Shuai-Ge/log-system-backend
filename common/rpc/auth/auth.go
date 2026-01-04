@@ -14,10 +14,21 @@ import (
 )
 
 type (
+	AppInfo               = auth.AppInfo
+	CreateAppRequest      = auth.CreateAppRequest
+	CreateAppResponse     = auth.CreateAppResponse
+	DeleteAppRequest      = auth.DeleteAppRequest
+	DeleteAppResponse     = auth.DeleteAppResponse
+	GetAppRequest         = auth.GetAppRequest
+	GetAppResponse        = auth.GetAppResponse
+	ListAppsRequest       = auth.ListAppsRequest
+	ListAppsResponse      = auth.ListAppsResponse
 	LoginRequest          = auth.LoginRequest
 	LoginResponse         = auth.LoginResponse
 	RegisterRequest       = auth.RegisterRequest
 	RegisterResponse      = auth.RegisterResponse
+	UpdateAppRequest      = auth.UpdateAppRequest
+	UpdateAppResponse     = auth.UpdateAppResponse
 	ValidateTokenRequest  = auth.ValidateTokenRequest
 	ValidateTokenResponse = auth.ValidateTokenResponse
 
@@ -25,6 +36,12 @@ type (
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 		ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
+		// App management
+		CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
+		UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
+		DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*DeleteAppResponse, error)
+		GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
+		ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	}
 
 	defaultAuth struct {
@@ -51,4 +68,30 @@ func (m *defaultAuth) Login(ctx context.Context, in *LoginRequest, opts ...grpc.
 func (m *defaultAuth) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
 	client := auth.NewAuthClient(m.cli.Conn())
 	return client.ValidateToken(ctx, in, opts...)
+}
+
+// App management
+func (m *defaultAuth) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.CreateApp(ctx, in, opts...)
+}
+
+func (m *defaultAuth) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.UpdateApp(ctx, in, opts...)
+}
+
+func (m *defaultAuth) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*DeleteAppResponse, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.DeleteApp(ctx, in, opts...)
+}
+
+func (m *defaultAuth) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.GetApp(ctx, in, opts...)
+}
+
+func (m *defaultAuth) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.ListApps(ctx, in, opts...)
 }

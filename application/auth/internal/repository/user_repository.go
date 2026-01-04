@@ -16,6 +16,8 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+	// Many-to-Many relationship
+	Apps []*App `gorm:"many2many:user_apps;"`
 }
 
 // BeforeCreate is a GORM hook that generates a UUID for the user before insertion

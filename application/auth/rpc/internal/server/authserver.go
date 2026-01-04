@@ -37,3 +37,29 @@ func (s *AuthServer) ValidateToken(ctx context.Context, in *auth.ValidateTokenRe
 	l := logic.NewValidateTokenLogic(ctx, s.svcCtx)
 	return l.ValidateToken(in)
 }
+
+// App management
+func (s *AuthServer) CreateApp(ctx context.Context, in *auth.CreateAppRequest) (*auth.CreateAppResponse, error) {
+	l := logic.NewCreateAppLogic(ctx, s.svcCtx)
+	return l.CreateApp(in)
+}
+
+func (s *AuthServer) UpdateApp(ctx context.Context, in *auth.UpdateAppRequest) (*auth.UpdateAppResponse, error) {
+	l := logic.NewUpdateAppLogic(ctx, s.svcCtx)
+	return l.UpdateApp(in)
+}
+
+func (s *AuthServer) DeleteApp(ctx context.Context, in *auth.DeleteAppRequest) (*auth.DeleteAppResponse, error) {
+	l := logic.NewDeleteAppLogic(ctx, s.svcCtx)
+	return l.DeleteApp(in)
+}
+
+func (s *AuthServer) GetApp(ctx context.Context, in *auth.GetAppRequest) (*auth.GetAppResponse, error) {
+	l := logic.NewGetAppLogic(ctx, s.svcCtx)
+	return l.GetApp(in)
+}
+
+func (s *AuthServer) ListApps(ctx context.Context, in *auth.ListAppsRequest) (*auth.ListAppsResponse, error) {
+	l := logic.NewListAppsLogic(ctx, s.svcCtx)
+	return l.ListApps(in)
+}
