@@ -5,6 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"log-system-backend/common/cryptox"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -28,7 +30,11 @@ func (a *App) BeforeCreate(tx *gorm.DB) (err error) {
 		a.ID = uuid.New().String()
 	}
 	if a.AppSecret == "" {
-		a.AppSecret = uuid.New().String() // Simple UUID as secret for now
+		secret, err := cryptox.GenerateRandomString(32) // 32 bytes = 64 hex chars
+		if err != nil {
+			return err
+		}
+		a.AppSecret = secret
 	}
 	return
 }
