@@ -14,25 +14,20 @@ import (
 )
 
 type Config struct {
-	Addresses          []string `json:",optional"`
-	Username           string   `json:",optional"`
-	Password           string   `json:",optional"`
-	APIKey             string   `json:",optional"`
-	CloudID            string   `json:",optional"`
-	ServiceToken       string   `json:",optional"`
-	InsecureSkipVerify bool     `json:",optional"`
-	MaxRetries         int      `json:",optional"`
+	Addresses          []string `json:",optional" yaml:",optional"`
+	Username           string   `json:",optional" yaml:",optional"`
+	Password           string   `json:",optional" yaml:",optional"`
+	APIKey             string   `json:",optional" yaml:",optional"`
+	CloudID            string   `json:",optional" yaml:",optional"`
+	ServiceToken       string   `json:",optional" yaml:",optional"`
+	InsecureSkipVerify bool     `json:",optional" yaml:",optional"`
+	MaxRetries         int      `json:",optional" yaml:",optional"`
 }
 
 func NewClient(cfg Config) (*elasticsearch.Client, error) {
 	addresses := cfg.Addresses
 	if len(addresses) == 0 {
 		addresses = []string{"http://localhost:9200"}
-	}
-
-	transport := &http.Transport{}
-	if cfg.InsecureSkipVerify {
-		transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 
 	esCfg := elasticsearch.Config{
@@ -42,13 +37,35 @@ func NewClient(cfg Config) (*elasticsearch.Client, error) {
 		APIKey:       cfg.APIKey,
 		CloudID:      cfg.CloudID,
 		ServiceToken: cfg.ServiceToken,
-		Transport:    transport,
 	}
+
+	if cfg.InsecureSkipVerify {
+		esCfg.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+	}
+
 	if cfg.MaxRetries > 0 {
 		esCfg.MaxRetries = cfg.MaxRetries
 	}
 
-	return elasticsearch.NewClient(esCfg)
+	client, err := elasticsearch.NewClient(esCfg)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create elasticsearch client: %w", err)
+	}
+
+	// 验证连接
+	res, err := client.Info()
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to elasticsearch: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.IsError() {
+		return nil, fmt.Errorf("elasticsearch returned an error: %s", res.String())
+	}
+
+	return client, nil
 }
 
 func IndexJSON(ctx context.Context, client *elasticsearch.Client, index string, doc any, opts ...func(*esapi.IndexRequest)) (*esapi.Response, error) {

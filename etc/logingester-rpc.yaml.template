@@ -10,6 +10,9 @@ Etcd:
 ES:
   Addresses:
     - http://localhost:9200
+  # Username: elastic
+  # Password: changeme
+  # InsecureSkipVerify: true
 
 Index: logs
 
