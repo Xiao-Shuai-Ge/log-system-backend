@@ -98,6 +98,15 @@ service log-api {
 }
 
 @server (
+	middleware: AppAuthMiddleware
+	group:      log
+)
+service log-api {
+	@handler PushLog
+	post /log/push (WriteLogReq) returns (WriteLogResp)
+}
+
+@server (
 	group: user
 )
 service log-api {

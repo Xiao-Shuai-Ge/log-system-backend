@@ -108,4 +108,16 @@ service Auth {
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
   rpc VerifyAppAccess(VerifyAppAccessRequest) returns (VerifyAppAccessResponse);
+  rpc VerifyAppSecret(VerifyAppSecretRequest) returns (VerifyAppSecretResponse);
+}
+
+message VerifyAppSecretRequest {
+  string app_id = 1;
+  string app_secret = 2;
+}
+
+message VerifyAppSecretResponse {
+  bool is_valid = 1;
+  string app_name = 2;
+  string app_code = 3;
 }

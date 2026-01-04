@@ -8,6 +8,6 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-	ES    es.Config `json:",optional"`
-	Index string    `json:",optional"`
+	ES    es.Config `json:",optional" yaml:",optional"`
+	Index string    `json:",optional" yaml:",optional"`
 }
