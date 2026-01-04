@@ -3,11 +3,75 @@
 
 package types
 
+type AppInfo struct {
+	AppId       string `json:"app_id"`
+	AppCode     string `json:"app_code"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+	AppSecret   string `json:"app_secret"`
+}
+
+type CreateAppReq struct {
+	AppCode     string `json:"app_code"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+}
+
+type CreateAppResp struct {
+	AppId     string `json:"app_id"`
+	AppSecret string `json:"app_secret"`
+}
+
+type DeleteAppReq struct {
+	AppId string `json:"app_id"`
+}
+
+type DeleteAppResp struct {
+}
+
+type GetAppReq struct {
+	AppId string `path:"app_id"`
+}
+
+type GetAppResp struct {
+	AppId       string `json:"app_id"`
+	AppCode     string `json:"app_code"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+	AppSecret   string `json:"app_secret"`
+	CreatedAt   int64  `json:"created_at"`
+}
+
+type ListAppsReq struct {
+}
+
+type ListAppsResp struct {
+	Apps []AppInfo `json:"apps"`
+}
+
 type LogItem struct {
 	Id        string                 `json:"id"`
 	Source    string                 `json:"source"`
 	Timestamp string                 `json:"timestamp"`
 	Content   map[string]interface{} `json:"content"`
+}
+
+type LoginReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginResp struct {
+	Token string `json:"token"`
+}
+
+type RegisterReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type RegisterResp struct {
+	UserId string `json:"user_id"`
 }
 
 type SearchLogReq struct {
@@ -21,6 +85,15 @@ type SearchLogReq struct {
 type SearchLogResp struct {
 	Logs  []LogItem `json:"logs"`
 	Total int64     `json:"total"`
+}
+
+type UpdateAppReq struct {
+	AppId       string `json:"app_id"`
+	AppName     string `json:"app_name"`
+	Description string `json:"description"`
+}
+
+type UpdateAppResp struct {
 }
 
 type WriteLogReq struct {

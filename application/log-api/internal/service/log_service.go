@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"fmt"
 
+	"log-system-backend/common/ctxutils"
 	"log-system-backend/common/errorx"
+	"log-system-backend/common/rpc/auth"
 	"log-system-backend/common/rpc/logingester"
 	"log-system-backend/common/rpc/logquery"
 
@@ -19,16 +22,40 @@ type LogApiService interface {
 type logApiService struct {
 	ingesterRpc logingester.LogIngester
 	queryRpc    logquery.LogQuery
+	authRpc     auth.Auth
 }
 
-func NewLogApiService(ingesterRpc logingester.LogIngester, queryRpc logquery.LogQuery) LogApiService {
+func NewLogApiService(ingesterRpc logingester.LogIngester, queryRpc logquery.LogQuery, authRpc auth.Auth) LogApiService {
 	return &logApiService{
 		ingesterRpc: ingesterRpc,
 		queryRpc:    queryRpc,
+		authRpc:     authRpc,
 	}
 }
 
+func (s *logApiService) VerifyAccess(ctx context.Context, appCode string) error {
+	userId, err := ctxutils.GetUserIdFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
+	accessResp, err := s.authRpc.VerifyAppAccess(ctx, &auth.VerifyAppAccessRequest{
+		UserId:  userId,
+		AppCode: appCode,
+	})
+	if err != nil {
+		return err
+	}
+	if !accessResp.HasAccess {
+		return errorx.NewCodeError(errorx.CodeForbidden, fmt.Sprintf("no access to app: %s", appCode))
+	}
+	return nil
+}
+
 func (s *logApiService) WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
+	if err := s.VerifyAccess(ctx, source); err != nil {
+		return err
+	}
 	data := make(map[string]interface{})
 
 	if metadata != nil {
@@ -57,6 +84,9 @@ func (s *logApiService) WriteLog(ctx context.Context, source, level, content str
 }
 
 func (s *logApiService) SearchLog(ctx context.Context, source, keyword string, metadata map[string]string, page, pageSize int64) (*logquery.SearchLogResp, error) {
+	if err := s.VerifyAccess(ctx, source); err != nil {
+		return nil, err
+	}
 	rpcResp, err := s.queryRpc.SearchLog(ctx, &logquery.SearchLogReq{
 		Source:   source,
 		Keyword:  keyword,

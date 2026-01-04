@@ -17,6 +17,8 @@ docker-compose -f deploy/docker-compose.yml up -d
 go run application/log-api/api/log.go
 go run application/log-ingester/rpc/ingester.go
 go run application/log-query/rpc/query.go
+go run application/user-auth/rpc/auth.go
+
 ```
 
 ## 🏗 架构设计

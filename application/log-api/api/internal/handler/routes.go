@@ -6,6 +6,9 @@ package handler
 import (
 	"net/http"
 
+	app "log-system-backend/application/log-api/api/internal/handler/app"
+	log "log-system-backend/application/log-api/api/internal/handler/log"
+	user "log-system-backend/application/log-api/api/internal/handler/user"
 	"log-system-backend/application/log-api/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -16,13 +19,60 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
+				Path:    "/app/:app_id",
+				Handler: app.GetAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/app/create",
+				Handler: app.CreateAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/app/delete",
+				Handler: app.DeleteAppHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/app/list",
+				Handler: app.ListAppsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/app/update",
+				Handler: app.UpdateAppHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
 				Path:    "/log/search",
-				Handler: SearchLogHandler(serverCtx),
+				Handler: log.SearchLogHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/log/write",
-				Handler: WriteLogHandler(serverCtx),
+				Handler: log.WriteLogHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/login",
+				Handler: user.LoginHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/register",
+				Handler: user.RegisterHandler(serverCtx),
 			},
 		},
 	)

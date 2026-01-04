@@ -10,6 +10,10 @@ import (
 
 type Config struct {
 	rest.RestConf
+	JwtAuth struct {
+		AccessSecret string
+	}
 	LogIngesterRpc zrpc.RpcClientConf
 	LogQueryRpc    zrpc.RpcClientConf
+	AuthRpc        zrpc.RpcClientConf
 }
