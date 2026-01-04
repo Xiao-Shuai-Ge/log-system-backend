@@ -1,0 +1,14 @@
+Name: auth.rpc
+ListenOn: 0.0.0.0:9093
+Mode: dev
+
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: auth.rpc
+
+DataSource: root:root@tcp(127.0.0.1:3306)/log_system?charset=utf8mb4&parseTime=True&loc=Local
+
+JwtAuth:
+  AccessSecret: 
+  AccessExpire: 86400

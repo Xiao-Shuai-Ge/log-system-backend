@@ -13,3 +13,9 @@ LogQueryRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: query.rpc
+
+AuthRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: auth.rpc
