@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"crypto/subtle"
 	"errors"
 
 	"log-system-backend/application/user-auth/internal/repository"
@@ -51,7 +52,7 @@ func (l *VerifyAppSecretLogic) VerifyAppSecret(in *auth.VerifyAppSecretRequest) 
 		}
 	}
 
-	if app.AppSecret == in.AppSecret {
+	if subtle.ConstantTimeCompare([]byte(app.AppSecret), []byte(in.AppSecret)) == 1 {
 		return &auth.VerifyAppSecretResponse{
 			IsValid: true,
 			AppName: app.AppName,
