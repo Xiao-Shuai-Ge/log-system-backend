@@ -5,11 +5,10 @@ package app
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 
 	"log-system-backend/application/log-api/api/internal/svc"
 	"log-system-backend/application/log-api/api/internal/types"
+	"log-system-backend/common/ctxutils"
 	"log-system-backend/common/rpc/auth"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -30,14 +29,9 @@ func NewCreateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateA
 }
 
 func (l *CreateAppLogic) CreateApp(req *types.CreateAppReq) (resp *types.CreateAppResp, err error) {
-	userId := l.ctx.Value("userId")
-	var userIdStr string
-	if v, ok := userId.(string); ok {
-		userIdStr = v
-	} else if v, ok := userId.(json.Number); ok {
-		userIdStr = v.String()
-	} else {
-		return nil, fmt.Errorf("invalid user id in context")
+	userIdStr, err := ctxutils.GetUserIdFromCtx(l.ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	rpcResp, err := l.svcCtx.AuthRpc.CreateApp(l.ctx, &auth.CreateAppRequest{
