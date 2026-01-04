@@ -25,7 +25,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	authRpc := auth.NewAuth(zrpc.MustNewClient(c.AuthRpc))
 	return &ServiceContext{
 		Config:        c,
-		LogApiService: service.NewLogApiService(logingester.NewLogIngester(zrpc.MustNewClient(c.LogIngesterRpc)), logQueryRpc),
+		LogApiService: service.NewLogApiService(logingester.NewLogIngester(zrpc.MustNewClient(c.LogIngesterRpc)), logQueryRpc, authRpc),
 		LogQueryRpc:   logQueryRpc,
 		AuthRpc:       authRpc,
 	}

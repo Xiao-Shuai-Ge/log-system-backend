@@ -7,9 +7,9 @@ package server
 import (
 	"context"
 
-	"log-system-backend/application/auth/rpc/auth"
-	"log-system-backend/application/auth/rpc/internal/logic"
-	"log-system-backend/application/auth/rpc/internal/svc"
+	"log-system-backend/application/user-auth/rpc/auth"
+	"log-system-backend/application/user-auth/rpc/internal/logic"
+	"log-system-backend/application/user-auth/rpc/internal/svc"
 )
 
 type AuthServer struct {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"log-system-backend/application/auth/internal/repository"
+	"log-system-backend/application/user-auth/internal/repository"
 	"log-system-backend/common/errorx"
 
 	"github.com/golang-jwt/jwt/v4"

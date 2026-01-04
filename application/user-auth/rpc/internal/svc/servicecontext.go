@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"log-system-backend/application/auth/internal/repository"
-	"log-system-backend/application/auth/internal/service"
-	"log-system-backend/application/auth/rpc/internal/config"
+	"log-system-backend/application/user-auth/internal/repository"
+	"log-system-backend/application/user-auth/internal/service"
+	"log-system-backend/application/user-auth/rpc/internal/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"log-system-backend/application/auth/rpc/auth"
-	"log-system-backend/application/auth/rpc/internal/svc"
+	"log-system-backend/application/user-auth/rpc/auth"
+	"log-system-backend/application/user-auth/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

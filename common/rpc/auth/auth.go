@@ -7,7 +7,7 @@ package auth
 import (
 	"context"
 
-	"log-system-backend/application/auth/rpc/auth"
+	"log-system-backend/application/user-auth/rpc/auth"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

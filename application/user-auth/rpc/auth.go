@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"log-system-backend/application/auth/rpc/auth"
-	"log-system-backend/application/auth/rpc/internal/config"
-	"log-system-backend/application/auth/rpc/internal/server"
-	"log-system-backend/application/auth/rpc/internal/svc"
+	"log-system-backend/application/user-auth/rpc/auth"
+	"log-system-backend/application/user-auth/rpc/internal/config"
+	"log-system-backend/application/user-auth/rpc/internal/server"
+	"log-system-backend/application/user-auth/rpc/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
