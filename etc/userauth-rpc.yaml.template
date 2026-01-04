@@ -10,5 +10,5 @@ Etcd:
 DataSource: root:root@tcp(127.0.0.1:3306)/log_system?charset=utf8mb4&parseTime=True&loc=Local
 
 JwtAuth:
-  AccessSecret: 
+  AccessSecret: "your-secret-key"
   AccessExpire: 86400
