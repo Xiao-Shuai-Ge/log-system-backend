@@ -89,6 +89,9 @@ goctl api go -api *.api -dir .
 
 # 生成 RPC 代码
 goctl rpc protoc *.proto --go_out=. --go-grpc_out=. --zrpc_out=.
+
+# 生成 Swagger 文档
+goctl api swagger -api application/log-api/api/log-api.api -dir application/log-api/api -filename swagger.json
 ```
 
 ---
