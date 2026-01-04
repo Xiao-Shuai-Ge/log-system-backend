@@ -33,6 +33,8 @@ type (
 	ValidateTokenResponse   = auth.ValidateTokenResponse
 	VerifyAppAccessRequest  = auth.VerifyAppAccessRequest
 	VerifyAppAccessResponse = auth.VerifyAppAccessResponse
+	VerifyAppSecretRequest  = auth.VerifyAppSecretRequest
+	VerifyAppSecretResponse = auth.VerifyAppSecretResponse
 
 	Auth interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
@@ -45,6 +47,7 @@ type (
 		GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
 		ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 		VerifyAppAccess(ctx context.Context, in *VerifyAppAccessRequest, opts ...grpc.CallOption) (*VerifyAppAccessResponse, error)
+		VerifyAppSecret(ctx context.Context, in *VerifyAppSecretRequest, opts ...grpc.CallOption) (*VerifyAppSecretResponse, error)
 	}
 
 	defaultAuth struct {
@@ -102,4 +105,9 @@ func (m *defaultAuth) ListApps(ctx context.Context, in *ListAppsRequest, opts ..
 func (m *defaultAuth) VerifyAppAccess(ctx context.Context, in *VerifyAppAccessRequest, opts ...grpc.CallOption) (*VerifyAppAccessResponse, error) {
 	client := auth.NewAuthClient(m.cli.Conn())
 	return client.VerifyAppAccess(ctx, in, opts...)
+}
+
+func (m *defaultAuth) VerifyAppSecret(ctx context.Context, in *VerifyAppSecretRequest, opts ...grpc.CallOption) (*VerifyAppSecretResponse, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.VerifyAppSecret(ctx, in, opts...)
 }

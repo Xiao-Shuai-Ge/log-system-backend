@@ -994,6 +994,110 @@ func (x *VerifyAppAccessResponse) GetHasAccess() bool {
 	return false
 }
 
+type VerifyAppSecretRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppId         string                 `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	AppSecret     string                 `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyAppSecretRequest) Reset() {
+	*x = VerifyAppSecretRequest{}
+	mi := &file_user_auth_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyAppSecretRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyAppSecretRequest) ProtoMessage() {}
+
+func (x *VerifyAppSecretRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_auth_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyAppSecretRequest.ProtoReflect.Descriptor instead.
+func (*VerifyAppSecretRequest) Descriptor() ([]byte, []int) {
+	return file_user_auth_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *VerifyAppSecretRequest) GetAppId() string {
+	if x != nil {
+		return x.AppId
+	}
+	return ""
+}
+
+func (x *VerifyAppSecretRequest) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+type VerifyAppSecretResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IsValid       bool                   `protobuf:"varint,1,opt,name=is_valid,json=isValid,proto3" json:"is_valid,omitempty"`
+	AppName       string                 `protobuf:"bytes,2,opt,name=app_name,json=appName,proto3" json:"app_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyAppSecretResponse) Reset() {
+	*x = VerifyAppSecretResponse{}
+	mi := &file_user_auth_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyAppSecretResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyAppSecretResponse) ProtoMessage() {}
+
+func (x *VerifyAppSecretResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_auth_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyAppSecretResponse.ProtoReflect.Descriptor instead.
+func (*VerifyAppSecretResponse) Descriptor() ([]byte, []int) {
+	return file_user_auth_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *VerifyAppSecretResponse) GetIsValid() bool {
+	if x != nil {
+		return x.IsValid
+	}
+	return false
+}
+
+func (x *VerifyAppSecretResponse) GetAppName() string {
+	if x != nil {
+		return x.AppName
+	}
+	return ""
+}
+
 var File_user_auth_proto protoreflect.FileDescriptor
 
 const file_user_auth_proto_rawDesc = "" +
@@ -1058,7 +1162,14 @@ const file_user_auth_proto_rawDesc = "" +
 	"\bapp_code\x18\x02 \x01(\tR\aappCode\"8\n" +
 	"\x17VerifyAppAccessResponse\x12\x1d\n" +
 	"\n" +
-	"has_access\x18\x01 \x01(\bR\thasAccess2\xb7\x04\n" +
+	"has_access\x18\x01 \x01(\bR\thasAccess\"N\n" +
+	"\x16VerifyAppSecretRequest\x12\x15\n" +
+	"\x06app_id\x18\x01 \x01(\tR\x05appId\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"O\n" +
+	"\x17VerifyAppSecretResponse\x12\x19\n" +
+	"\bis_valid\x18\x01 \x01(\bR\aisValid\x12\x19\n" +
+	"\bapp_name\x18\x02 \x01(\tR\aappName2\x87\x05\n" +
 	"\x04Auth\x129\n" +
 	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\x120\n" +
 	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponse\x12H\n" +
@@ -1068,7 +1179,8 @@ const file_user_auth_proto_rawDesc = "" +
 	"\tDeleteApp\x12\x16.auth.DeleteAppRequest\x1a\x17.auth.DeleteAppResponse\x123\n" +
 	"\x06GetApp\x12\x13.auth.GetAppRequest\x1a\x14.auth.GetAppResponse\x129\n" +
 	"\bListApps\x12\x15.auth.ListAppsRequest\x1a\x16.auth.ListAppsResponse\x12N\n" +
-	"\x0fVerifyAppAccess\x12\x1c.auth.VerifyAppAccessRequest\x1a\x1d.auth.VerifyAppAccessResponseB\bZ\x06./authb\x06proto3"
+	"\x0fVerifyAppAccess\x12\x1c.auth.VerifyAppAccessRequest\x1a\x1d.auth.VerifyAppAccessResponse\x12N\n" +
+	"\x0fVerifyAppSecret\x12\x1c.auth.VerifyAppSecretRequest\x1a\x1d.auth.VerifyAppSecretResponseB\bZ\x06./authb\x06proto3"
 
 var (
 	file_user_auth_proto_rawDescOnce sync.Once
@@ -1082,7 +1194,7 @@ func file_user_auth_proto_rawDescGZIP() []byte {
 	return file_user_auth_proto_rawDescData
 }
 
-var file_user_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_user_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_user_auth_proto_goTypes = []any{
 	(*RegisterRequest)(nil),         // 0: auth.RegisterRequest
 	(*RegisterResponse)(nil),        // 1: auth.RegisterResponse
@@ -1103,6 +1215,8 @@ var file_user_auth_proto_goTypes = []any{
 	(*ListAppsResponse)(nil),        // 16: auth.ListAppsResponse
 	(*VerifyAppAccessRequest)(nil),  // 17: auth.VerifyAppAccessRequest
 	(*VerifyAppAccessResponse)(nil), // 18: auth.VerifyAppAccessResponse
+	(*VerifyAppSecretRequest)(nil),  // 19: auth.VerifyAppSecretRequest
+	(*VerifyAppSecretResponse)(nil), // 20: auth.VerifyAppSecretResponse
 }
 var file_user_auth_proto_depIdxs = []int32{
 	15, // 0: auth.ListAppsResponse.apps:type_name -> auth.AppInfo
@@ -1115,17 +1229,19 @@ var file_user_auth_proto_depIdxs = []int32{
 	12, // 7: auth.Auth.GetApp:input_type -> auth.GetAppRequest
 	14, // 8: auth.Auth.ListApps:input_type -> auth.ListAppsRequest
 	17, // 9: auth.Auth.VerifyAppAccess:input_type -> auth.VerifyAppAccessRequest
-	1,  // 10: auth.Auth.Register:output_type -> auth.RegisterResponse
-	3,  // 11: auth.Auth.Login:output_type -> auth.LoginResponse
-	5,  // 12: auth.Auth.ValidateToken:output_type -> auth.ValidateTokenResponse
-	7,  // 13: auth.Auth.CreateApp:output_type -> auth.CreateAppResponse
-	9,  // 14: auth.Auth.UpdateApp:output_type -> auth.UpdateAppResponse
-	11, // 15: auth.Auth.DeleteApp:output_type -> auth.DeleteAppResponse
-	13, // 16: auth.Auth.GetApp:output_type -> auth.GetAppResponse
-	16, // 17: auth.Auth.ListApps:output_type -> auth.ListAppsResponse
-	18, // 18: auth.Auth.VerifyAppAccess:output_type -> auth.VerifyAppAccessResponse
-	10, // [10:19] is the sub-list for method output_type
-	1,  // [1:10] is the sub-list for method input_type
+	19, // 10: auth.Auth.VerifyAppSecret:input_type -> auth.VerifyAppSecretRequest
+	1,  // 11: auth.Auth.Register:output_type -> auth.RegisterResponse
+	3,  // 12: auth.Auth.Login:output_type -> auth.LoginResponse
+	5,  // 13: auth.Auth.ValidateToken:output_type -> auth.ValidateTokenResponse
+	7,  // 14: auth.Auth.CreateApp:output_type -> auth.CreateAppResponse
+	9,  // 15: auth.Auth.UpdateApp:output_type -> auth.UpdateAppResponse
+	11, // 16: auth.Auth.DeleteApp:output_type -> auth.DeleteAppResponse
+	13, // 17: auth.Auth.GetApp:output_type -> auth.GetAppResponse
+	16, // 18: auth.Auth.ListApps:output_type -> auth.ListAppsResponse
+	18, // 19: auth.Auth.VerifyAppAccess:output_type -> auth.VerifyAppAccessResponse
+	20, // 20: auth.Auth.VerifyAppSecret:output_type -> auth.VerifyAppSecretResponse
+	11, // [11:21] is the sub-list for method output_type
+	1,  // [1:11] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name
@@ -1142,7 +1258,7 @@ func file_user_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_auth_proto_rawDesc), len(file_user_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -16,6 +16,7 @@ import (
 
 type LogApiService interface {
 	WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error
+	WriteAppLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error
 	SearchLog(ctx context.Context, source, keyword string, metadata map[string]string, page, pageSize int64) (*logquery.SearchLogResp, error)
 }
 
@@ -56,6 +57,16 @@ func (s *logApiService) WriteLog(ctx context.Context, source, level, content str
 	if err := s.VerifyAccess(ctx, source); err != nil {
 		return err
 	}
+	return s.writeToIngester(ctx, source, level, content, metadata)
+}
+
+func (s *logApiService) WriteAppLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
+	// Skip VerifyAccess as it is for User context.
+	// App context verification is done by middleware.
+	return s.writeToIngester(ctx, source, level, content, metadata)
+}
+
+func (s *logApiService) writeToIngester(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
 	data := make(map[string]interface{})
 
 	if metadata != nil {

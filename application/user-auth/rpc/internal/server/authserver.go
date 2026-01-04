@@ -68,3 +68,8 @@ func (s *AuthServer) VerifyAppAccess(ctx context.Context, in *auth.VerifyAppAcce
 	l := logic.NewVerifyAppAccessLogic(ctx, s.svcCtx)
 	return l.VerifyAppAccess(in)
 }
+
+func (s *AuthServer) VerifyAppSecret(ctx context.Context, in *auth.VerifyAppSecretRequest) (*auth.VerifyAppSecretResponse, error) {
+	l := logic.NewVerifyAppSecretLogic(ctx, s.svcCtx)
+	return l.VerifyAppSecret(in)
+}
