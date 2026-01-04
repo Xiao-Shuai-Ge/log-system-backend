@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"errors"
 
+	"log-system-backend/application/user-auth/internal/repository"
 	"log-system-backend/application/user-auth/rpc/auth"
 	"log-system-backend/application/user-auth/rpc/internal/svc"
 
@@ -31,13 +33,22 @@ func (l *VerifyAppSecretLogic) VerifyAppSecret(in *auth.VerifyAppSecretRequest) 
 	// First try to find by ID (UUID)
 	app, err := l.svcCtx.AppRepo.FindOne(l.ctx, in.AppId)
 	if err != nil {
+		if !errors.Is(err, repository.ErrNotFound) {
+			logx.Errorf("VerifyAppSecret: error finding app by id '%s': %v", in.AppId, err)
+			return nil, err
+		}
+
 		// If not found by ID, try by AppCode as "AppId" is often used interchangeably with ClientID
-		appByCode, errCode := l.svcCtx.AppRepo.FindOneByAppCode(l.ctx, in.AppId)
-		if errCode != nil {
-			logx.Errorf("VerifyAppSecret: app not found by id or code: %s", in.AppId)
+		app, err = l.svcCtx.AppRepo.FindOneByAppCode(l.ctx, in.AppId)
+		if err != nil {
+			if !errors.Is(err, repository.ErrNotFound) {
+				logx.Errorf("VerifyAppSecret: error finding app by code '%s': %v", in.AppId, err)
+				return nil, err
+			}
+
+			logx.Infof("VerifyAppSecret: app not found by id or code: %s", in.AppId)
 			return &auth.VerifyAppSecretResponse{IsValid: false}, nil
 		}
-		app = appByCode
 	}
 
 	if app.AppSecret == in.AppSecret {
