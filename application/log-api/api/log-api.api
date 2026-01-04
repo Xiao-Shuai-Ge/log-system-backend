@@ -27,6 +27,20 @@ type (
 		Logs  []LogItem `json:"logs"`
 		Total int64     `json:"total"`
 	}
+	RegisterReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	RegisterResp {
+		UserId string `json:"user_id"`
+	}
+	LoginReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	LoginResp {
+		Token string `json:"token"`
+	}
 )
 
 service log-api {
@@ -35,5 +49,16 @@ service log-api {
 
 	@handler SearchLog
 	get /log/search (SearchLogReq) returns (SearchLogResp)
+}
+
+@server (
+	group: user
+)
+service log-api {
+	@handler Register
+	post /user/register (RegisterReq) returns (RegisterResp)
+
+	@handler Login
+	post /user/login (LoginReq) returns (LoginResp)
 }
 

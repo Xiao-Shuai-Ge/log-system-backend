@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	user "log-system-backend/application/log-api/api/internal/handler/user"
 	"log-system-backend/application/log-api/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -23,6 +24,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/log/write",
 				Handler: WriteLogHandler(serverCtx),
+			},
+		},
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/login",
+				Handler: user.LoginHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/register",
+				Handler: user.RegisterHandler(serverCtx),
 			},
 		},
 	)

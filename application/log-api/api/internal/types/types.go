@@ -10,6 +10,24 @@ type LogItem struct {
 	Content   map[string]interface{} `json:"content"`
 }
 
+type LoginReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginResp struct {
+	Token string `json:"token"`
+}
+
+type RegisterReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type RegisterResp struct {
+	UserId string `json:"user_id"`
+}
+
 type SearchLogReq struct {
 	Source   string `form:"source,optional"`
 	Keyword  string `form:"keyword,optional"`
