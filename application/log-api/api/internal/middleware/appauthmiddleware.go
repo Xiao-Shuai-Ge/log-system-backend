@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 
+	"log-system-backend/common/ctxutils"
 	"log-system-backend/common/errorx"
 	"log-system-backend/common/rpc/auth"
 
@@ -43,6 +44,8 @@ func (m *AppAuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		next(w, r)
+		// 将 appCode 放入 Context
+		ctx := ctxutils.SetAppCodeToCtx(r.Context(), resp.AppCode)
+		next(w, r.WithContext(ctx))
 	}
 }

@@ -56,6 +56,7 @@ func (l *VerifyAppSecretLogic) VerifyAppSecret(in *auth.VerifyAppSecretRequest) 
 		return &auth.VerifyAppSecretResponse{
 			IsValid: true,
 			AppName: app.AppName,
+			AppCode: app.AppCode,
 		}, nil
 	}
 

@@ -119,4 +119,5 @@ message VerifyAppSecretRequest {
 message VerifyAppSecretResponse {
   bool is_valid = 1;
   string app_name = 2;
+  string app_code = 3;
 }

@@ -5,6 +5,7 @@ import (
 
 	"log-system-backend/application/log-api/api/internal/svc"
 	"log-system-backend/application/log-api/api/internal/types"
+	"log-system-backend/common/ctxutils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +25,13 @@ func NewPushLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PushLogLo
 }
 
 func (l *PushLogLogic) PushLog(req *types.WriteLogReq) (resp *types.WriteLogResp, err error) {
-	err = l.svcCtx.LogApiService.WriteAppLog(l.ctx, req.Source, req.Level, req.Content, req.Metadata)
+	// 从 Context 中获取 appCode，确保日志来源是经过认证的应用
+	appCode, err := ctxutils.GetAppCodeFromCtx(l.ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = l.svcCtx.LogApiService.WriteAppLog(l.ctx, appCode, req.Level, req.Content, req.Metadata)
 	if err != nil {
 		return nil, err
 	}
