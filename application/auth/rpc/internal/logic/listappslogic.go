@@ -36,6 +36,7 @@ func (l *ListAppsLogic) ListApps(in *auth.ListAppsRequest) (*auth.ListAppsRespon
 			AppCode:     app.AppCode,
 			AppName:     app.AppName,
 			Description: app.Description,
+			AppSecret:   app.AppSecret,
 		})
 	}
 

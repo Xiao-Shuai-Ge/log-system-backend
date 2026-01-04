@@ -40,6 +40,7 @@ func (l *GetAppLogic) GetApp(req *types.GetAppReq) (resp *types.GetAppResp, err 
 		AppCode:     rpcResp.AppCode,
 		AppName:     rpcResp.AppName,
 		Description: rpcResp.Description,
+		AppSecret:   rpcResp.AppSecret,
 		CreatedAt:   rpcResp.CreatedAt,
 	}, nil
 }

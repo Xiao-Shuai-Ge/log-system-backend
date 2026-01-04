@@ -55,6 +55,7 @@ func (l *ListAppsLogic) ListApps(req *types.ListAppsReq) (resp *types.ListAppsRe
 			AppCode:     app.AppCode,
 			AppName:     app.AppName,
 			Description: app.Description,
+			AppSecret:   app.AppSecret,
 		})
 	}
 

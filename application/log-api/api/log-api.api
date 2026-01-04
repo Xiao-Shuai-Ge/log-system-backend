@@ -48,7 +48,8 @@ type (
 		Description string `json:"description"`
 	}
 	CreateAppResp {
-		AppId string `json:"app_id"`
+		AppId     string `json:"app_id"`
+		AppSecret string `json:"app_secret"`
 	}
 	UpdateAppReq {
 		AppId       string `json:"app_id"`
@@ -68,6 +69,7 @@ type (
 		AppCode     string `json:"app_code"`
 		AppName     string `json:"app_name"`
 		Description string `json:"description"`
+		AppSecret   string `json:"app_secret"`
 		CreatedAt   int64  `json:"created_at"`
 	}
 	ListAppsReq  {}
@@ -76,12 +78,17 @@ type (
 		AppCode     string `json:"app_code"`
 		AppName     string `json:"app_name"`
 		Description string `json:"description"`
+		AppSecret   string `json:"app_secret"`
 	}
 	ListAppsResp {
 		Apps []AppInfo `json:"apps"`
 	}
 )
 
+@server (
+	jwt:   JwtAuth
+	group: log
+)
 service log-api {
 	@handler WriteLog
 	post /log/write (WriteLogReq) returns (WriteLogResp)

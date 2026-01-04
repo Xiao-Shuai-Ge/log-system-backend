@@ -25,12 +25,13 @@ func NewCreateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateA
 
 // App management
 func (l *CreateAppLogic) CreateApp(in *auth.CreateAppRequest) (*auth.CreateAppResponse, error) {
-	appID, err := l.svcCtx.AppService.CreateApp(l.ctx, in.AppCode, in.AppName, in.Description, in.UserId)
+	app, err := l.svcCtx.AppService.CreateApp(l.ctx, in.AppCode, in.AppName, in.Description, in.UserId)
 	if err != nil {
 		return nil, err
 	}
 
 	return &auth.CreateAppResponse{
-		AppId: appID,
+		AppId:     app.ID,
+		AppSecret: app.AppSecret,
 	}, nil
 }

@@ -35,5 +35,6 @@ func (l *GetAppLogic) GetApp(in *auth.GetAppRequest) (*auth.GetAppResponse, erro
 		AppName:     app.AppName,
 		Description: app.Description,
 		CreatedAt:   app.CreatedAt.Unix(),
+		AppSecret:   app.AppSecret,
 	}, nil
 }

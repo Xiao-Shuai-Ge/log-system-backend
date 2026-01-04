@@ -63,3 +63,8 @@ func (s *AuthServer) ListApps(ctx context.Context, in *auth.ListAppsRequest) (*a
 	l := logic.NewListAppsLogic(ctx, s.svcCtx)
 	return l.ListApps(in)
 }
+
+func (s *AuthServer) VerifyAppAccess(ctx context.Context, in *auth.VerifyAppAccessRequest) (*auth.VerifyAppAccessResponse, error) {
+	l := logic.NewVerifyAppAccessLogic(ctx, s.svcCtx)
+	return l.VerifyAppAccess(in)
+}

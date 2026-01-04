@@ -9,11 +9,12 @@ import (
 )
 
 type AppService interface {
-	CreateApp(ctx context.Context, appCode, appName, description, userID string) (string, error)
+	CreateApp(ctx context.Context, appCode, appName, description, userID string) (*repository.App, error)
 	UpdateApp(ctx context.Context, appID, appName, description string) error
 	DeleteApp(ctx context.Context, appID string) error
 	GetApp(ctx context.Context, appID string) (*repository.App, error)
 	ListUserApps(ctx context.Context, userID string) ([]*repository.App, error)
+	VerifyUserAccess(ctx context.Context, userID, appCode string) (bool, error)
 }
 
 type appService struct {
@@ -28,14 +29,14 @@ func NewAppService(repo repository.AppRepository, userRepo repository.UserReposi
 	}
 }
 
-func (s *appService) CreateApp(ctx context.Context, appCode, appName, description, userID string) (string, error) {
+func (s *appService) CreateApp(ctx context.Context, appCode, appName, description, userID string) (*repository.App, error) {
 	// Check if app code exists
 	_, err := s.repo.FindOneByAppCode(ctx, appCode)
 	if err == nil {
-		return "", errorx.NewCodeError(errorx.CodeParamError, "app code already exists")
+		return nil, errorx.NewCodeError(errorx.CodeParamError, "app code already exists")
 	}
 	if !errors.Is(err, repository.ErrNotFound) {
-		return "", errorx.NewCodeError(errorx.CodeInternal, "database error")
+		return nil, errorx.NewCodeError(errorx.CodeInternal, "database error")
 	}
 
 	app := &repository.App{
@@ -47,7 +48,7 @@ func (s *appService) CreateApp(ctx context.Context, appCode, appName, descriptio
 	// Insert app
 	err = s.repo.Insert(ctx, app)
 	if err != nil {
-		return "", errorx.NewCodeError(errorx.CodeInternal, "failed to create app")
+		return nil, errorx.NewCodeError(errorx.CodeInternal, "failed to create app")
 	}
 
 	// Assign to user
@@ -56,11 +57,11 @@ func (s *appService) CreateApp(ctx context.Context, appCode, appName, descriptio
 		if err != nil {
 			// Rollback? Or just log error. For now, simple error return.
 			// Ideally we should use transaction.
-			return app.ID, errorx.NewCodeError(errorx.CodeInternal, "failed to assign user to app")
+			return app, errorx.NewCodeError(errorx.CodeInternal, "failed to assign user to app")
 		}
 	}
 
-	return app.ID, nil
+	return app, nil
 }
 
 func (s *appService) UpdateApp(ctx context.Context, appID, appName, description string) error {
@@ -81,6 +82,26 @@ func (s *appService) UpdateApp(ctx context.Context, appID, appName, description 
 	}
 
 	return nil
+}
+
+func (s *appService) VerifyUserAccess(ctx context.Context, userID, appCode string) (bool, error) {
+	// 1. Get User's apps
+	apps, err := s.repo.ListByUserID(ctx, userID)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return false, nil
+		}
+		return false, errorx.NewCodeError(errorx.CodeInternal, "database error")
+	}
+
+	// 2. Check if appCode is in the list
+	for _, app := range apps {
+		if app.AppCode == appCode {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func (s *appService) DeleteApp(ctx context.Context, appID string) error {

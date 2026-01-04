@@ -41,6 +41,7 @@ message CreateAppRequest {
 
 message CreateAppResponse {
   string app_id = 1;
+  string app_secret = 2;
 }
 
 message UpdateAppRequest {
@@ -67,6 +68,7 @@ message GetAppResponse {
   string app_name = 3;
   string description = 4;
   int64 created_at = 5;
+  string app_secret = 6;
 }
 
 message ListAppsRequest {
@@ -78,10 +80,20 @@ message AppInfo {
   string app_code = 2;
   string app_name = 3;
   string description = 4;
+  string app_secret = 5;
 }
 
 message ListAppsResponse {
   repeated AppInfo apps = 1;
+}
+
+message VerifyAppAccessRequest {
+  string user_id = 1;
+  string app_code = 2;
+}
+
+message VerifyAppAccessResponse {
+  bool has_access = 1;
 }
 
 service Auth {
@@ -95,4 +107,5 @@ service Auth {
   rpc DeleteApp(DeleteAppRequest) returns (DeleteAppResponse);
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  rpc VerifyAppAccess(VerifyAppAccessRequest) returns (VerifyAppAccessResponse);
 }

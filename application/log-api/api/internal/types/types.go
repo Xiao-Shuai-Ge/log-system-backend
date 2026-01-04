@@ -8,6 +8,7 @@ type AppInfo struct {
 	AppCode     string `json:"app_code"`
 	AppName     string `json:"app_name"`
 	Description string `json:"description"`
+	AppSecret   string `json:"app_secret"`
 }
 
 type CreateAppReq struct {
@@ -17,7 +18,8 @@ type CreateAppReq struct {
 }
 
 type CreateAppResp struct {
-	AppId string `json:"app_id"`
+	AppId     string `json:"app_id"`
+	AppSecret string `json:"app_secret"`
 }
 
 type DeleteAppReq struct {
@@ -36,6 +38,7 @@ type GetAppResp struct {
 	AppCode     string `json:"app_code"`
 	AppName     string `json:"app_name"`
 	Description string `json:"description"`
+	AppSecret   string `json:"app_secret"`
 	CreatedAt   int64  `json:"created_at"`
 }
 

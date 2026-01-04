@@ -2,7 +2,7 @@
 // goctl 1.9.2
 // Source: user_auth.proto
 
-package auth
+package authclient
 
 import (
 	"context"

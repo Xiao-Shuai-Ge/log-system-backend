@@ -51,6 +51,7 @@ func (l *CreateAppLogic) CreateApp(req *types.CreateAppReq) (resp *types.CreateA
 	}
 
 	return &types.CreateAppResp{
-		AppId: rpcResp.AppId,
+		AppId:     rpcResp.AppId,
+		AppSecret: rpcResp.AppSecret,
 	}, nil
 }

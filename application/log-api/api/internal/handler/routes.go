@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	app "log-system-backend/application/log-api/api/internal/handler/app"
+	log "log-system-backend/application/log-api/api/internal/handler/log"
 	user "log-system-backend/application/log-api/api/internal/handler/user"
 	"log-system-backend/application/log-api/api/internal/svc"
 
@@ -14,21 +15,6 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/log/search",
-				Handler: SearchLogHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/log/write",
-				Handler: WriteLogHandler(serverCtx),
-			},
-		},
-	)
-
 	server.AddRoutes(
 		[]rest.Route{
 			{
@@ -55,6 +41,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/app/update",
 				Handler: app.UpdateAppHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/log/search",
+				Handler: log.SearchLogHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/log/write",
+				Handler: log.WriteLogHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

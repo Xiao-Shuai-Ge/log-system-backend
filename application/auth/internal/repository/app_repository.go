@@ -10,10 +10,11 @@ import (
 )
 
 type App struct {
-	ID          string         `gorm:"primaryKey;type:char(36)"`
-	AppCode     string         `gorm:"uniqueIndex;type:varchar(50);not null;comment:Application Identifier Code"`
-	AppName     string         `gorm:"type:varchar(255);not null;comment:Application Name"`
-	Description string         `gorm:"type:text;comment:Application Description"`
+	ID          string `gorm:"primaryKey;type:char(36)"`
+	AppCode     string `gorm:"uniqueIndex;type:varchar(50);not null;comment:Application Identifier Code"`
+	AppName     string `gorm:"type:varchar(255);not null;comment:Application Name"`
+	AppSecret   string `gorm:"type:varchar(64);not null;comment:Application Secret for API Access"`
+	Description string `gorm:"type:text;comment:Application Description"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
@@ -25,6 +26,9 @@ type App struct {
 func (a *App) BeforeCreate(tx *gorm.DB) (err error) {
 	if a.ID == "" {
 		a.ID = uuid.New().String()
+	}
+	if a.AppSecret == "" {
+		a.AppSecret = uuid.New().String() // Simple UUID as secret for now
 	}
 	return
 }
