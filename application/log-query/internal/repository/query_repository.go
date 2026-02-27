@@ -30,6 +30,7 @@ type esRepository struct {
 	index  string
 }
 
+// NewESRepository 创建基于 Elasticsearch 的日志查询仓储实例
 func NewESRepository(client *elasticsearch.Client, index string) LogRepository {
 	return &esRepository{
 		client: client,
@@ -37,9 +38,10 @@ func NewESRepository(client *elasticsearch.Client, index string) LogRepository {
 	}
 }
 
+// Search 根据指定的查询条件从 Elasticsearch 中检索日志
 func (r *esRepository) Search(ctx context.Context, q SearchQuery) (*SearchResult, error) {
 	if r.client == nil {
-		return nil, fmt.Errorf("es client is nil")
+		return nil, fmt.Errorf("ES 客户端为空")
 	}
 
 	must := []interface{}{}
@@ -62,8 +64,8 @@ func (r *esRepository) Search(ctx context.Context, q SearchQuery) (*SearchResult
 	}
 
 	for k, v := range q.Metadata {
-		// For metadata, we try to use .keyword for exact matching if it's not already specified
-		// This is a common pattern in ES for dynamic fields
+		// 对于元数据，我们尝试对特定字段使用 .keyword 进行精确匹配
+		// 这是 ES 动态字段的常用处理模式
 		field := k
 		if k == "level" || k == "source" {
 			field = k + ".keyword"

@@ -23,6 +23,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
+// Register 处理用户注册请求
 func (l *RegisterLogic) Register(in *auth.RegisterRequest) (*auth.RegisterResponse, error) {
 	userId, err := l.svcCtx.AuthService.Register(l.ctx, in.Username, in.Password)
 	if err != nil {

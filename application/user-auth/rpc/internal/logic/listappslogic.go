@@ -23,6 +23,7 @@ func NewListAppsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListApps
 	}
 }
 
+// ListApps 处理获取用户应用列表的请求
 func (l *ListAppsLogic) ListApps(in *auth.ListAppsRequest) (*auth.ListAppsResponse, error) {
 	apps, err := l.svcCtx.AppService.ListUserApps(l.ctx, in.UserId)
 	if err != nil {

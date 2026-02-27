@@ -16,12 +16,14 @@ type ingesterService struct {
 	repo repository.LogRepository
 }
 
+// NewIngesterService 创建日志采集服务实例
 func NewIngesterService(repo repository.LogRepository) IngesterService {
 	return &ingesterService{
 		repo: repo,
 	}
 }
 
+// WriteLog 执行日志写入逻辑，包括时间戳填充和数据保存
 func (s *ingesterService) WriteLog(ctx context.Context, data map[string]interface{}) error {
 	// 1. 数据清洗/填充
 	if _, ok := data["@timestamp"]; !ok {

@@ -27,6 +27,7 @@ func NewSearchLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchL
 	}
 }
 
+// SearchLog 处理日志查询请求，支持关键字搜索、元数据过滤及分页
 func (l *SearchLogLogic) SearchLog(req *types.SearchLogReq) (resp *types.SearchLogResp, err error) {
 	var metadata map[string]string
 	if req.Metadata != "" {

@@ -24,6 +24,7 @@ func NewPushLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PushLogLo
 	}
 }
 
+// PushLog 处理来自应用（通过 AppSecret 认证）的日志推送请求
 func (l *PushLogLogic) PushLog(req *types.WriteLogReq) (resp *types.WriteLogResp, err error) {
 	// 从 Context 中获取 appCode，确保日志来源是经过认证的应用
 	appCode, err := ctxutils.GetAppCodeFromCtx(l.ctx)

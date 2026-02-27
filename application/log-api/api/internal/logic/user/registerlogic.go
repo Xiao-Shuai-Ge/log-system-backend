@@ -27,6 +27,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
+// Register 处理 API 层用户注册请求，调用 Auth RPC 完成注册
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
 	res, err := l.svcCtx.AuthRpc.Register(l.ctx, &auth.RegisterRequest{
 		Username: req.Username,

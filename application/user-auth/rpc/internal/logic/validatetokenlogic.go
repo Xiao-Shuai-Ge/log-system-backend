@@ -23,6 +23,7 @@ func NewValidateTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Val
 	}
 }
 
+// ValidateToken 验证 JWT 令牌的有效性并返回用户 ID
 func (l *ValidateTokenLogic) ValidateToken(in *auth.ValidateTokenRequest) (*auth.ValidateTokenResponse, error) {
 	userId, valid, err := l.svcCtx.AuthService.ValidateToken(l.ctx, in.Token)
 	if err != nil {

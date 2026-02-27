@@ -28,6 +28,7 @@ func NewCreateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateA
 	}
 }
 
+// CreateApp 处理 API 层的应用创建请求，从上下文获取用户 ID 并调用 Auth RPC
 func (l *CreateAppLogic) CreateApp(req *types.CreateAppReq) (resp *types.CreateAppResp, err error) {
 	userIdStr, err := ctxutils.GetUserIdFromCtx(l.ctx)
 	if err != nil {

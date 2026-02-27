@@ -23,6 +23,7 @@ func NewVerifyAppAccessLogic(ctx context.Context, svcCtx *svc.ServiceContext) *V
 	}
 }
 
+// VerifyAppAccess 验证指定用户是否拥有对特定应用的访问权限
 func (l *VerifyAppAccessLogic) VerifyAppAccess(in *auth.VerifyAppAccessRequest) (*auth.VerifyAppAccessResponse, error) {
 	hasAccess, err := l.svcCtx.AppService.VerifyUserAccess(l.ctx, in.UserId, in.AppCode)
 	if err != nil {

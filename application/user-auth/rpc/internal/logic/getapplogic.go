@@ -23,6 +23,7 @@ func NewGetAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAppLogi
 	}
 }
 
+// GetApp 处理获取单个应用详情的请求
 func (l *GetAppLogic) GetApp(in *auth.GetAppRequest) (*auth.GetAppResponse, error) {
 	app, err := l.svcCtx.AppService.GetApp(l.ctx, in.AppId)
 	if err != nil {

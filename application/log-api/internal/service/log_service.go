@@ -26,6 +26,7 @@ type logApiService struct {
 	authRpc     auth.Auth
 }
 
+// NewLogApiService 创建日志 API 服务实例
 func NewLogApiService(ingesterRpc logingester.LogIngester, queryRpc logquery.LogQuery, authRpc auth.Auth) LogApiService {
 	return &logApiService{
 		ingesterRpc: ingesterRpc,
@@ -34,6 +35,7 @@ func NewLogApiService(ingesterRpc logingester.LogIngester, queryRpc logquery.Log
 	}
 }
 
+// VerifyAccess 验证当前用户是否具有对指定应用的访问权限
 func (s *logApiService) VerifyAccess(ctx context.Context, appCode string) error {
 	userId, err := ctxutils.GetUserIdFromCtx(ctx)
 	if err != nil {
@@ -48,11 +50,12 @@ func (s *logApiService) VerifyAccess(ctx context.Context, appCode string) error 
 		return err
 	}
 	if !accessResp.HasAccess {
-		return errorx.NewCodeError(errorx.CodeForbidden, fmt.Sprintf("no access to app: %s", appCode))
+		return errorx.NewCodeError(errorx.CodeForbidden, fmt.Sprintf("无权访问应用: %s", appCode))
 	}
 	return nil
 }
 
+// WriteLog 处理来自用户上下文的日志写入请求（需验证用户权限）
 func (s *logApiService) WriteLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
 	if err := s.VerifyAccess(ctx, source); err != nil {
 		return err
@@ -60,12 +63,14 @@ func (s *logApiService) WriteLog(ctx context.Context, source, level, content str
 	return s.writeToIngester(ctx, source, level, content, metadata)
 }
 
+// WriteAppLog 处理来自应用上下文（AppSecret 验证）的日志写入请求
 func (s *logApiService) WriteAppLog(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
-	// Skip VerifyAccess as it is for User context.
-	// App context verification is done by middleware.
+	// 跳过 VerifyAccess，因为它是针对用户上下文的。
+	// 应用上下文的验证由中间件完成。
 	return s.writeToIngester(ctx, source, level, content, metadata)
 }
 
+// writeToIngester 内部方法，将日志数据发送到日志采集 RPC 服务
 func (s *logApiService) writeToIngester(ctx context.Context, source, level, content string, metadata map[string]interface{}) error {
 	data := make(map[string]interface{})
 
@@ -82,7 +87,7 @@ func (s *logApiService) writeToIngester(ctx context.Context, source, level, cont
 
 	logData, err := structpb.NewStruct(data)
 	if err != nil {
-		return errorx.NewCodeError(errorx.CodeInternal, "failed to create log data")
+		return errorx.NewCodeError(errorx.CodeInternal, "创建日志数据失败")
 	}
 
 	_, err = s.ingesterRpc.WriteLog(ctx, &logingester.WriteLogReq{
@@ -94,6 +99,7 @@ func (s *logApiService) writeToIngester(ctx context.Context, source, level, cont
 	return nil
 }
 
+// SearchLog 搜索指定应用的日志（需验证用户权限）
 func (s *logApiService) SearchLog(ctx context.Context, source, keyword string, metadata map[string]string, page, pageSize int64) (*logquery.SearchLogResp, error) {
 	if err := s.VerifyAccess(ctx, source); err != nil {
 		return nil, err
@@ -112,6 +118,7 @@ func (s *logApiService) SearchLog(ctx context.Context, source, keyword string, m
 	return rpcResp, nil
 }
 
+// convertGrpcError 将 gRPC 错误转换为自定义的 CodeError
 func (s *logApiService) convertGrpcError(err error) error {
 	st, ok := status.FromError(err)
 	if ok {

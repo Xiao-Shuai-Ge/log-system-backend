@@ -27,6 +27,7 @@ func NewGetAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAppLogi
 	}
 }
 
+// GetApp 处理获取应用详情的请求，调用 Auth RPC 获取数据
 func (l *GetAppLogic) GetApp(req *types.GetAppReq) (resp *types.GetAppResp, err error) {
 	rpcResp, err := l.svcCtx.AuthRpc.GetApp(l.ctx, &auth.GetAppRequest{
 		AppId: req.AppId,

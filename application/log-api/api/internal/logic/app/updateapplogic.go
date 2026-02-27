@@ -27,6 +27,7 @@ func NewUpdateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateA
 	}
 }
 
+// UpdateApp 更新应用的基本信息（如名称、描述）
 func (l *UpdateAppLogic) UpdateApp(req *types.UpdateAppReq) (resp *types.UpdateAppResp, err error) {
 	_, err = l.svcCtx.AuthRpc.UpdateApp(l.ctx, &auth.UpdateAppRequest{
 		AppId:       req.AppId,

@@ -16,11 +16,11 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
-	// Many-to-Many relationship
+	// 多对多关系
 	Apps []*App `gorm:"many2many:user_apps;"`
 }
 
-// BeforeCreate is a GORM hook that generates a UUID for the user before insertion
+// BeforeCreate GORM 钩子，在插入前生成 UUID
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	if u.ID == "" {
 		u.ID = uuid.New().String()
@@ -37,18 +37,21 @@ type mysqlUserRepository struct {
 	db *gorm.DB
 }
 
+// NewMysqlUserRepository 创建 MySQL 用户仓储实例并自动迁移表结构
 func NewMysqlUserRepository(db *gorm.DB) UserRepository {
-	// Auto migrate
+	// 自动迁移
 	db.AutoMigrate(&User{})
 	return &mysqlUserRepository{
 		db: db,
 	}
 }
 
+// Insert 插入新用户
 func (r *mysqlUserRepository) Insert(ctx context.Context, user *User) error {
 	return r.db.WithContext(ctx).Create(user).Error
 }
 
+// FindOneByUsername 根据用户名查找用户
 func (r *mysqlUserRepository) FindOneByUsername(ctx context.Context, username string) (*User, error) {
 	var user User
 	err := r.db.WithContext(ctx).Where("username = ?", username).First(&user).Error

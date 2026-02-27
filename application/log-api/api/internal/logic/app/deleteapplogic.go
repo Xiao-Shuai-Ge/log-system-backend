@@ -27,6 +27,7 @@ func NewDeleteAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteA
 	}
 }
 
+// DeleteApp 处理 API 层的应用删除请求
 func (l *DeleteAppLogic) DeleteApp(req *types.DeleteAppReq) (resp *types.DeleteAppResp, err error) {
 	_, err = l.svcCtx.AuthRpc.DeleteApp(l.ctx, &auth.DeleteAppRequest{
 		AppId: req.AppId,

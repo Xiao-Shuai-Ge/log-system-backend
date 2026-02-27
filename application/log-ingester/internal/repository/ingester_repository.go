@@ -20,6 +20,7 @@ type esRepository struct {
 	index  string
 }
 
+// NewESRepository 创建一个基于 Elasticsearch 的日志仓储实例
 func NewESRepository(client *elasticsearch.Client, index string) LogRepository {
 	return &esRepository{
 		client: client,
@@ -27,12 +28,13 @@ func NewESRepository(client *elasticsearch.Client, index string) LogRepository {
 	}
 }
 
+// Save 将单条日志数据保存到 Elasticsearch
 func (r *esRepository) Save(ctx context.Context, data map[string]interface{}) error {
 	if r.client == nil {
-		return fmt.Errorf("es client is nil")
+		return fmt.Errorf("ES 客户端为空")
 	}
 	if r.index == "" {
-		return fmt.Errorf("es index is empty")
+		return fmt.Errorf("ES 索引名为空")
 	}
 
 	resp, err := es.IndexJSON(ctx, r.client, r.index, data)

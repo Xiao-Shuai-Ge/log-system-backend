@@ -26,6 +26,7 @@ func NewWriteLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *WriteLog
 	}
 }
 
+// WriteLog 处理通用的日志写入请求，调用 LogApiService 进行处理
 func (l *WriteLogLogic) WriteLog(req *types.WriteLogReq) (resp *types.WriteLogResp, err error) {
 	err = l.svcCtx.LogApiService.WriteLog(l.ctx, req.Source, req.Level, req.Content, req.Metadata)
 	if err != nil {

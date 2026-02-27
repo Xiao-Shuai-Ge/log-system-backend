@@ -28,6 +28,7 @@ func NewListAppsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListApps
 	}
 }
 
+// ListApps 获取当前登录用户的所有应用列表
 func (l *ListAppsLogic) ListApps(req *types.ListAppsReq) (resp *types.ListAppsResp, err error) {
 	userIdStr, err := ctxutils.GetUserIdFromCtx(l.ctx)
 	if err != nil {

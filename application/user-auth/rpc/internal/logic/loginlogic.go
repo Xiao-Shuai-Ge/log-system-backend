@@ -23,6 +23,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 	}
 }
 
+// Login 处理用户登录请求，验证身份并返回 JWT 令牌
 func (l *LoginLogic) Login(in *auth.LoginRequest) (*auth.LoginResponse, error) {
 	token, err := l.svcCtx.AuthService.Login(l.ctx, in.Username, in.Password)
 	if err != nil {

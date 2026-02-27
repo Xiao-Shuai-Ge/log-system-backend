@@ -14,19 +14,21 @@ type AppAuthMiddleware struct {
 	authRpc auth.Auth
 }
 
+// NewAppAuthMiddleware 创建应用授权中间件实例
 func NewAppAuthMiddleware(authRpc auth.Auth) *AppAuthMiddleware {
 	return &AppAuthMiddleware{
 		authRpc: authRpc,
 	}
 }
 
+// Handle 处理请求，通过请求头中的 X-App-Id 和 X-App-Secret 验证应用身份
 func (m *AppAuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		appId := r.Header.Get("X-App-Id")
 		appSecret := r.Header.Get("X-App-Secret")
 
 		if appId == "" || appSecret == "" {
-			httpx.Error(w, errorx.NewCodeError(401, "Missing App-Id or App-Secret header"))
+			httpx.Error(w, errorx.NewCodeError(401, "请求头中缺少 X-App-Id 或 X-App-Secret"))
 			return
 		}
 
@@ -35,12 +37,12 @@ func (m *AppAuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			AppSecret: appSecret,
 		})
 		if err != nil {
-			httpx.Error(w, errorx.NewCodeError(500, "Internal Server Error during auth"))
+			httpx.Error(w, errorx.NewCodeError(500, "认证过程中服务器内部错误"))
 			return
 		}
 
 		if !resp.IsValid {
-			httpx.Error(w, errorx.NewCodeError(401, "Invalid App-Id or App-Secret"))
+			httpx.Error(w, errorx.NewCodeError(401, "无效的 X-App-Id 或 X-App-Secret"))
 			return
 		}
 

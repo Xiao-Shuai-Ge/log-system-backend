@@ -23,6 +23,7 @@ func NewUpdateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateA
 	}
 }
 
+// UpdateApp 处理应用更新请求
 func (l *UpdateAppLogic) UpdateApp(in *auth.UpdateAppRequest) (*auth.UpdateAppResponse, error) {
 	err := l.svcCtx.AppService.UpdateApp(l.ctx, in.AppId, in.AppName, in.Description)
 	if err != nil {

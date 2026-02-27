@@ -23,7 +23,7 @@ func NewCreateAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateA
 	}
 }
 
-// App management
+// CreateApp 处理应用创建请求，调用服务层创建应用并返回其 ID 和密钥
 func (l *CreateAppLogic) CreateApp(in *auth.CreateAppRequest) (*auth.CreateAppResponse, error) {
 	app, err := l.svcCtx.AppService.CreateApp(l.ctx, in.AppCode, in.AppName, in.Description, in.UserId)
 	if err != nil {

@@ -23,6 +23,7 @@ func NewDeleteAppLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteA
 	}
 }
 
+// DeleteApp 处理应用删除请求
 func (l *DeleteAppLogic) DeleteApp(in *auth.DeleteAppRequest) (*auth.DeleteAppResponse, error) {
 	err := l.svcCtx.AppService.DeleteApp(l.ctx, in.AppId)
 	if err != nil {
